@@ -43,8 +43,6 @@ export const colors = {
   fertileContainer: '#AEF3E7',
   fertileSurface: '#DDF2EF',
   onFertileContainer: '#2A1E2E',
-  calendarToday: '#FBE7EC',
-  calendarSelected: '#2A1E2E',
   intimacy: '#7B5EA7',
 
   // Feedback

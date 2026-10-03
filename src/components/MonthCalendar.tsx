@@ -10,7 +10,7 @@ export type LegendKey = 'period' | 'predicted' | 'fertile' | 'ovulation' | 'inti
 
 // Every day is a circle; its fill says what kind of day it is.
 const fills: Record<Exclude<NonNullable<DayKind>, 'predicted'>, { background: string; text: string }> = {
-  period: { background: colors.period, text: colors.onPrimary },
+  period: { background: colors.periodContainer, text: colors.onPeriodContainer },
   fertile: { background: colors.fertileContainer, text: colors.onFertileContainer },
 };
 
@@ -56,7 +56,7 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
       const info = classify(iso);
       const isExpectedFertile = info.ovulation && info.kind !== 'period';
       const fill = info.kind && info.kind !== 'predicted' && !isExpectedFertile ? fills[info.kind] : null;
-      const expectedColor = info.kind === 'predicted' ? colors.period : isExpectedFertile ? colors.fertileContainer : null;
+      const expectedShade = info.kind === 'predicted' ? colors.periodContainer : isExpectedFertile ? colors.fertileContainer : null;
       const isSelected = iso === selected;
       const isToday = iso === today;
       const statuses = [info.kind && t(info.kind === 'period' ? 'calendar.period' : info.kind === 'predicted' ? 'calendar.predicted' : 'calendar.fertile'), info.ovulation && t('calendar.ovulation'), info.intimacy && t('calendar.intimacy'), isToday && t('common.today')].filter(Boolean);
@@ -72,11 +72,10 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
         <View key={`${info.kind}-${isSelected}-${isToday}-${info.ovulation}-${size}`} style={[
           styles.circle,
           fill && { backgroundColor: fill.background },
-          expectedColor && { borderWidth: 2, borderColor: expectedColor, borderStyle: 'dashed' },
           circleSize,
         ]}>
+          {expectedShade && <Stripes color={expectedShade} size={size} />}
           <Text style={[styles.dayText, fill && { color: fill.text }, isToday && styles.todayText]}>{day.getDate()}</Text>
-          {isToday && <View pointerEvents="none" style={[styles.todayRing, isSelected && styles.todayRingInset, { borderRadius: size / 2 }]} />}
           {isSelected && <View pointerEvents="none" style={[styles.selectedRing, { borderRadius: size / 2 }]} />}
         </View>
         {info.intimacy && <View style={[styles.heart, { top: (CELL_HEIGHT + size) / 2 + space.xs }]}><Icon name="heart" size={10} color={colors.error} /></View>}
@@ -89,16 +88,22 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
 function LegendItem({ kind, label }: { kind: LegendKey; label: string }) {
   const isExpected = kind === 'predicted' || kind === 'ovulation';
   const color = kind === 'period' || kind === 'predicted'
-    ? colors.period
+    ? colors.periodContainer
     : kind === 'fertile' || kind === 'ovulation'
       ? colors.fertileContainer
-      : colors.calendarToday;
+      : colors.primary;
   return <View style={styles.legendItem}>
     {kind === 'intimacy'
       ? <Icon name="heart" size={12} color={colors.error} />
-      : <View style={[styles.swatch, isExpected ? styles.expectedSwatch : { backgroundColor: color }, isExpected && { borderColor: color }, kind === 'today' && styles.todaySwatch]} />}
+      : kind === 'today'
+        ? <Text style={styles.todaySwatch}>1</Text>
+        : <View style={[styles.swatch, isExpected ? styles.expectedSwatch : { backgroundColor: color }]}>{isExpected && <Stripes color={color} size={14} />}</View>}
     <Text style={styles.legendText}>{label}</Text>
   </View>;
+}
+
+function Stripes({ color, size }: { color: string; size: number }) {
+  return <View pointerEvents="none" style={styles.stripeLayer}>{[-size / 2, 0, size / 2, size, size * 1.5].map((top) => <View key={top} style={[styles.stripe, { top, width: size * 2, left: -size / 2, backgroundColor: color }]} />)}</View>;
 }
 
 const CIRCLE = 40;
@@ -113,16 +118,16 @@ const styles = StyleSheet.create({
   weekday: { flex: 1, textAlign: 'center', color: colors.onSurfaceVariant, fontSize: 12, fontWeight: '600', paddingBottom: space.sm, textTransform: 'capitalize' },
   cell: { flex: 1, height: CELL_HEIGHT, alignItems: 'center', justifyContent: 'center' },
   circle: { alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
-  todayRing: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, borderWidth: 2, borderColor: colors.calendarToday },
-  todayRingInset: { top: 3, right: 3, bottom: 3, left: 3 },
-  selectedRing: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, borderWidth: 3, borderColor: colors.calendarSelected },
+  stripeLayer: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
+  stripe: { position: 'absolute', height: 2, opacity: 0.7, transform: [{ rotate: '-45deg' }] },
+  selectedRing: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, borderWidth: 3, borderColor: colors.primary },
   dayText: { color: colors.onSurface, fontSize: 15, fontWeight: '500' },
-  todayText: { fontWeight: '800' },
+  todayText: { color: colors.primary, fontWeight: '800' },
   heart: { position: 'absolute' },
   legend: { flexDirection: 'row', flexWrap: 'wrap', columnGap: space.md, rowGap: space.sm, marginTop: space.md, paddingTop: space.md, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.outlineVariant },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
-  swatch: { width: 14, height: 14, borderRadius: 7 },
-  expectedSwatch: { borderWidth: 2, borderStyle: 'dashed' },
-  todaySwatch: { borderWidth: 2, borderColor: colors.calendarToday },
+  swatch: { width: 14, height: 14, borderRadius: 7, overflow: 'hidden' },
+  expectedSwatch: { backgroundColor: colors.surfaceContainerLowest },
+  todaySwatch: { width: 14, color: colors.primary, fontSize: 14, fontWeight: '800', textAlign: 'center' },
   legendText: { color: colors.onSurfaceVariant, fontSize: 13 },
 });
