@@ -4,7 +4,7 @@ import { Icon } from '@/components/Icon';
 import { addDays, isoDate, startOfMonth, todayIso, type DayInfo, type DayKind } from '@/cycle';
 import { useI18n } from '@/i18n';
 import type { WeekStart } from '@/preferences';
-import { colors, space } from '@/theme';
+import { colors, fonts, space } from '@/theme';
 
 export type LegendKey = 'period' | 'predicted' | 'predicted_ovulation' | 'intimacy' | 'today';
 
@@ -111,22 +111,22 @@ const CELL_HEIGHT = CIRCLE + 18;
 const styles = StyleSheet.create({
   wrapper: { gap: space.xs },
   header: { flexDirection: 'row', alignItems: 'center', gap: space.sm, marginBottom: space.md },
-  title: { flex: 1, color: colors.onSurface, fontSize: 18, fontWeight: '700' },
+  title: { flex: 1, color: colors.onSurface, fontFamily: fonts.display, fontSize: 18, fontWeight: '700' },
   navButton: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceContainer },
   row: { flexDirection: 'row' },
-  weekday: { flex: 1, textAlign: 'center', color: colors.onSurfaceVariant, fontSize: 12, fontWeight: '600', paddingBottom: space.sm, textTransform: 'capitalize' },
+  weekday: { flex: 1, textAlign: 'center', color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 12, fontWeight: '600', paddingBottom: space.sm, textTransform: 'capitalize' },
   cell: { flex: 1, height: CELL_HEIGHT, alignItems: 'center', justifyContent: 'center' },
   circle: { alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   stripeLayer: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 },
   stripe: { position: 'absolute', height: 2, opacity: 0.7, transform: [{ rotate: '-45deg' }] },
   selectedRing: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, borderWidth: 3, borderColor: colors.primary },
-  dayText: { color: colors.onSurface, fontSize: 15, fontWeight: '500' },
+  dayText: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 15, fontWeight: '500' },
   todayText: { color: colors.primary, fontWeight: '800' },
   heart: { position: 'absolute' },
   legend: { flexDirection: 'row', flexWrap: 'wrap', columnGap: space.md, rowGap: space.sm, marginTop: space.md, paddingTop: space.md, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.outlineVariant },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   swatch: { width: 14, height: 14, borderRadius: 7, overflow: 'hidden' },
   expectedSwatch: { backgroundColor: colors.surfaceContainerLowest },
-  todaySwatch: { width: 14, color: colors.primary, fontSize: 14, fontWeight: '800', textAlign: 'center' },
-  legendText: { color: colors.onSurfaceVariant, fontSize: 13 },
+  todaySwatch: { width: 14, color: colors.primary, fontFamily: fonts.body, fontSize: 14, fontWeight: '800', textAlign: 'center' },
+  legendText: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 13 },
 });

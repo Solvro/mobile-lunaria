@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, Tex
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/Button';
 import { useI18n } from '@/i18n';
-import { colors, shape, typeScale } from '@/theme';
+import { colors, fonts, shape, typeScale } from '@/theme';
 
 export function ConfirmationSheet({ visible, title, message, confirmation, confirmLabel, working, onCancel, onConfirm }: { visible: boolean; title: string; message: string; confirmation: string; confirmLabel: string; working: boolean; onCancel: () => void; onConfirm: () => Promise<void> }) {
   const { t, locale } = useI18n();
@@ -37,5 +37,5 @@ const styles = StyleSheet.create({
   anchor: { flex: 1, justifyContent: 'flex-end' },
   sheet: { backgroundColor: colors.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, gap: 12 },
   handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.outlineVariant, alignSelf: 'center', marginBottom: 6 },
-  input: { backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant, borderRadius: shape.md, minHeight: 52, paddingHorizontal: 14, color: colors.onSurface, fontSize: 16 },
+  input: { backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant, borderRadius: shape.md, minHeight: 52, paddingHorizontal: 14, color: colors.onSurface, fontFamily: fonts.body, fontSize: 16 },
 });

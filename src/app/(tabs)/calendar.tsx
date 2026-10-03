@@ -13,7 +13,7 @@ import { Screen } from '@/components/Screen';
 import { addDays, currentPeriod, dayClassifier, daysBetween, isoDate, parseDate, recentRange, startOfMonth, todayIso } from '@/cycle';
 import { useI18n } from '@/i18n';
 import { usePreferences } from '@/preferences';
-import { colors, space, typeScale } from '@/theme';
+import { colors, fonts, space, typeScale } from '@/theme';
 
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -164,5 +164,5 @@ export default function Calendar() {
 
 const styles = StyleSheet.create({
   heroAction: { marginTop: space.md, gap: space.md },
-  heroHint: { color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20, textAlign: 'center' },
+  heroHint: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 14, lineHeight: 20, textAlign: 'center' },
 });

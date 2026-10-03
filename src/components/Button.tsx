@@ -1,6 +1,6 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon, type IconName } from '@/components/Icon';
-import { colors, shape } from '@/theme';
+import { colors, fonts, shape } from '@/theme';
 
 // M3 buttons: primary = filled, secondary = tonal, outline = outlined, ghost = text, danger = tonal error.
 type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   outline: { backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.outline },
   ghost: { backgroundColor: 'transparent', minHeight: 44 },
   danger: { backgroundColor: colors.errorContainer },
-  label: { fontSize: 16, fontWeight: '700' },
+  label: { fontFamily: fonts.body, fontSize: 16, fontWeight: '700' },
   pressed: { opacity: 0.85, transform: [{ scale: 0.99 }] },
   disabled: { opacity: 0.5 },
 });

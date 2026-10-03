@@ -9,7 +9,7 @@ import { Icon, type IconName } from '@/components/Icon';
 import { PodMark } from '@/components/PodMark';
 import { useI18n } from '@/i18n';
 import { usePreferences } from '@/preferences';
-import { colors, shape, typeScale } from '@/theme';
+import { colors, fonts, shape, typeScale } from '@/theme';
 
 type Step = 'choose' | 'register' | 'signin';
 
@@ -57,7 +57,7 @@ export default function Welcome() {
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.topBar}>
           {step === 'choose'
-            ? <View style={styles.brand}><PodMark size={30} /><Text style={styles.brandName}>lunaria</Text></View>
+            ? <View style={styles.brand}><PodMark size={30} /><Text style={styles.brandName}>Lunaria</Text></View>
             : <Pressable onPress={() => setStep('choose')} style={styles.back} accessibilityRole="button" accessibilityLabel={t('common.back')} hitSlop={8}><Icon name="back" size={18} /></Pressable>}
           <LanguageSwitch />
         </View>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   content: { flexGrow: 1, padding: 24, gap: 20 },
   topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', minHeight: 40 },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  brandName: { fontSize: 20, letterSpacing: 1.5, color: colors.primary, fontWeight: '700' },
+  brandName: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 22, letterSpacing: -0.5, fontWeight: '700' },
   back: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surfaceContainer, alignItems: 'center', justifyContent: 'center' },
   hero: { gap: 12, marginTop: 24 },
   muted: { color: colors.onSurfaceVariant },
@@ -143,21 +143,21 @@ const styles = StyleSheet.create({
   modeIcon: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
   modeText: { flex: 1, gap: 4 },
   footer: { marginTop: 'auto', gap: 8 },
-  disclaimer: { color: colors.onSurfaceVariant, textAlign: 'center', fontSize: 12, lineHeight: 17 },
+  disclaimer: { color: colors.onSurfaceVariant, fontFamily: fonts.body, textAlign: 'center', fontSize: 12, lineHeight: 17 },
   modePill: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 10, borderRadius: shape.full, backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant, marginTop: -8 },
-  modePillText: { color: colors.onSurface, fontWeight: '600', fontSize: 14 },
-  modePillChange: { color: colors.primary, fontWeight: '700', fontSize: 14 },
+  modePillText: { color: colors.onSurface, fontFamily: fonts.body, fontWeight: '600', fontSize: 14 },
+  modePillChange: { color: colors.primary, fontFamily: fonts.body, fontWeight: '700', fontSize: 14 },
   form: { gap: 14 },
   field: { gap: 6 },
-  input: { backgroundColor: colors.surfaceContainerLowest, color: colors.onSurface, borderColor: colors.outlineVariant, borderWidth: 1, borderRadius: shape.md, minHeight: 52, paddingHorizontal: 14, fontSize: 16 },
-  hint: { color: colors.onSurfaceVariant, fontSize: 13, lineHeight: 18 },
+  input: { backgroundColor: colors.surfaceContainerLowest, color: colors.onSurface, borderColor: colors.outlineVariant, borderWidth: 1, borderRadius: shape.md, minHeight: 52, paddingHorizontal: 14, fontFamily: fonts.body, fontSize: 16 },
+  hint: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 13, lineHeight: 18 },
   consentRow: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
   checkbox: { width: 24, height: 24, borderRadius: 6, borderWidth: 1.5, borderColor: colors.onSurfaceVariant, alignItems: 'center', justifyContent: 'center', marginTop: 1 },
   checkboxOn: { backgroundColor: colors.primary, borderColor: colors.primary },
-  consent: { flex: 1, color: colors.onSurface, fontSize: 14, lineHeight: 20 },
+  consent: { flex: 1, color: colors.onSurface, fontFamily: fonts.body, fontSize: 14, lineHeight: 20 },
   language: { flexDirection: 'row', backgroundColor: colors.surfaceContainer, borderRadius: shape.full, padding: 3 },
   languageOption: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: shape.full },
   languageActive: { backgroundColor: colors.surfaceContainerLowest },
-  languageText: { color: colors.onSurfaceVariant, fontWeight: '700', fontSize: 13 },
+  languageText: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontWeight: '700', fontSize: 13 },
   languageTextActive: { color: colors.onSurface },
 });
