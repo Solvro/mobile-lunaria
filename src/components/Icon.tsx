@@ -23,6 +23,6 @@ const icons = {
 
 export type IconName = keyof typeof icons;
 
-export function Icon({ name, size = 20, color = colors.text }: { name: IconName; size?: number; color?: ColorValue }) {
+export function Icon({ name, size = 20, color = colors.onSurface }: { name: IconName; size?: number; color?: ColorValue }) {
   return <SymbolView name={icons[name]} size={size} tintColor={color} style={{ width: size, height: size }} />;
 }

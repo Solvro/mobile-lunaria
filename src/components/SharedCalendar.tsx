@@ -11,7 +11,7 @@ import { MonthCalendar, type LegendKey } from '@/components/MonthCalendar';
 import { addDays, dayClassifier, isoDate, recentRange, startOfMonth, todayIso } from '@/cycle';
 import { useI18n } from '@/i18n';
 import { usePreferences } from '@/preferences';
-import { colors, radius } from '@/theme';
+import { colors, shape } from '@/theme';
 
 // Read-only view of the linked partner's calendar, limited to what they share.
 export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
@@ -62,7 +62,7 @@ export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
     </Card>
     <DayDetails iso={selected} info={classify(selected)} />
     <View style={styles.notice}>
-      <Icon name="eye" size={16} color={colors.muted} />
+      <Icon name="eye" size={16} color={colors.onSurfaceVariant} />
       <Text style={styles.noticeText}>{sharesAnything ? t('partner.readOnly', { name }) : t('partner.nothingShared', { name })}</Text>
     </View>
   </View>;
@@ -71,6 +71,6 @@ export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
 const styles = StyleSheet.create({
   wrapper: { gap: 24 },
   loading: { marginVertical: 32 },
-  notice: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', padding: 14, borderRadius: radius.md, backgroundColor: colors.surfaceMuted },
-  noticeText: { flex: 1, color: colors.muted, fontSize: 14, lineHeight: 20 },
+  notice: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', padding: 14, borderRadius: shape.lg, backgroundColor: colors.surfaceContainer },
+  noticeText: { flex: 1, color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20 },
 });

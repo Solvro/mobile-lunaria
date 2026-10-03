@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Keyboard, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Tabs } from 'expo-router';
-import { colors, motion, radius } from '@/theme';
+import { colors, motion, shape } from '@/theme';
 
 type TabBarProps = Parameters<NonNullable<React.ComponentProps<typeof Tabs>['tabBar']>>[0];
 
@@ -16,7 +16,7 @@ export function NavigationBar({ state, descriptors, navigation, insets }: TabBar
       const { options } = descriptors[route.key];
       const focused = state.routes[state.index].key === route.key;
       const label = typeof options.title === 'string' ? options.title : route.name;
-      const color = focused ? colors.primary : colors.muted;
+      const color = focused ? colors.primary : colors.onSurfaceVariant;
       const onPress = () => {
         const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
         if (!focused && !event.defaultPrevented) navigation.navigate(route.name, route.params);
@@ -57,12 +57,12 @@ function Indicator({ focused, children }: { focused: boolean; children: React.Re
 }
 
 const styles = StyleSheet.create({
-  bar: { flexDirection: 'row', backgroundColor: colors.surface, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
+  bar: { flexDirection: 'row', backgroundColor: colors.surfaceContainerLowest, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.outlineVariant },
   item: { flex: 1, alignItems: 'center', gap: 4 },
   indicatorSlot: { width: 64, height: 32, alignItems: 'center', justifyContent: 'center' },
-  indicator: { ...StyleSheet.absoluteFill, borderRadius: radius.pill, backgroundColor: colors.primarySoft },
-  label: { color: colors.muted, fontSize: 12, fontWeight: '500', letterSpacing: 0.4 },
-  labelActive: { color: colors.text, fontWeight: '700' },
-  badge: { position: 'absolute', top: 0, right: 14, minWidth: 16, height: 16, paddingHorizontal: 4, borderRadius: 8, backgroundColor: colors.danger, alignItems: 'center', justifyContent: 'center' },
+  indicator: { ...StyleSheet.absoluteFill, borderRadius: 16, backgroundColor: colors.primaryContainer },
+  label: { color: colors.onSurfaceVariant, fontSize: 12, fontWeight: '500', letterSpacing: 0.4 },
+  labelActive: { color: colors.onSurface, fontWeight: '700' },
+  badge: { position: 'absolute', top: 0, right: 14, minWidth: 16, height: 16, paddingHorizontal: 4, borderRadius: 8, backgroundColor: colors.error, alignItems: 'center', justifyContent: 'center' },
   badgeText: { color: colors.onPrimary, fontSize: 11, fontWeight: '700' },
 });

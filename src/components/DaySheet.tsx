@@ -5,7 +5,7 @@ import { Button } from '@/components/Button';
 import { Icon, type IconName } from '@/components/Icon';
 import { parseDate } from '@/cycle';
 import { useI18n } from '@/i18n';
-import { colors, radius, typography } from '@/theme';
+import { colors, shape, typeScale } from '@/theme';
 
 export type Draft = Pick<DailyRecord, 'date' | 'is_period' | 'flow' | 'intimacy' | 'note'>;
 export const flowLevels: NonNullable<DailyRecord['flow']>[] = ['spotting', 'light', 'medium', 'heavy'];
@@ -30,8 +30,8 @@ export function DaySheet({ draft, onChange, onClose, onSave, onClear, saving, ca
       <View style={[styles.sheet, { paddingBottom: insets.bottom + 16 }]}>
         <View style={styles.handle} />
         <View style={styles.header}>
-          <Text style={[typography.heading, styles.title]}>{title.charAt(0).toUpperCase() + title.slice(1)}</Text>
-          <Pressable onPress={onClose} style={styles.close} accessibilityRole="button" accessibilityLabel={t('common.cancel')} hitSlop={8}><Icon name="close" size={16} color={colors.muted} /></Pressable>
+          <Text style={[typeScale.titleLarge, styles.title]}>{title.charAt(0).toUpperCase() + title.slice(1)}</Text>
+          <Pressable onPress={onClose} style={styles.close} accessibilityRole="button" accessibilityLabel={t('common.cancel')} hitSlop={8}><Icon name="close" size={16} color={colors.onSurfaceVariant} /></Pressable>
         </View>
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           <ToggleCard
@@ -43,7 +43,7 @@ export function DaySheet({ draft, onChange, onClose, onSave, onClear, saving, ca
             onPress={() => onChange({ ...draft, is_period: !draft.is_period, flow: draft.is_period ? null : draft.flow ?? 'medium' })}
           />
           {draft.is_period && <View style={styles.flowBlock}>
-            <Text style={typography.label}>{t('sheet.flow')}</Text>
+            <Text style={typeScale.labelMedium}>{t('sheet.flow')}</Text>
             <View style={styles.flows}>{flowLevels.map((flow, index) => {
               const active = draft.flow === flow;
               return <Pressable key={flow} onPress={() => onChange({ ...draft, flow })} style={[styles.flow, active && styles.flowActive]} accessibilityRole="radio" accessibilityState={{ selected: active }}>
@@ -61,13 +61,13 @@ export function DaySheet({ draft, onChange, onClose, onSave, onClear, saving, ca
             onPress={() => onChange({ ...draft, intimacy: !draft.intimacy })}
           />
           <View style={styles.noteBox}>
-            <Icon name="lock" size={14} color={colors.muted} />
+            <Icon name="lock" size={14} color={colors.onSurfaceVariant} />
             <TextInput
               value={draft.note ?? ''}
               onChangeText={(note) => onChange({ ...draft, note: note || null })}
               multiline
               placeholder={t('sheet.notePlaceholder')}
-              placeholderTextColor={colors.muted}
+              placeholderTextColor={colors.onSurfaceVariant}
               style={styles.note}
               accessibilityLabel={t('day.note')}
             />
@@ -83,37 +83,37 @@ export function DaySheet({ draft, onChange, onClose, onSave, onClear, saving, ca
 }
 
 function ToggleCard({ icon, label, hint, active, activeColor, onPress }: { icon: IconName; label: string; hint: string; active: boolean; activeColor: string; onPress: () => void }) {
-  return <Pressable onPress={onPress} style={[styles.toggle, active && { borderColor: activeColor, backgroundColor: colors.surface }]} accessibilityRole="checkbox" accessibilityState={{ checked: active }} accessibilityHint={hint}>
-    <View style={[styles.toggleIcon, { backgroundColor: active ? activeColor : colors.surfaceMuted }]}><Icon name={icon} size={18} color={active ? colors.onPrimary : activeColor} /></View>
+  return <Pressable onPress={onPress} style={[styles.toggle, active && { borderColor: activeColor, backgroundColor: colors.surfaceContainerLowest }]} accessibilityRole="checkbox" accessibilityState={{ checked: active }} accessibilityHint={hint}>
+    <View style={[styles.toggleIcon, { backgroundColor: active ? activeColor : colors.surfaceContainer }]}><Icon name={icon} size={18} color={active ? colors.onPrimary : activeColor} /></View>
     <View style={styles.toggleText}>
-      <Text style={typography.bodyStrong}>{label}</Text>
-      <Text style={typography.caption}>{hint}</Text>
+      <Text style={typeScale.titleMedium}>{label}</Text>
+      <Text style={typeScale.bodyMedium}>{hint}</Text>
     </View>
     <View style={[styles.check, active && { backgroundColor: activeColor, borderColor: activeColor }]}>{active && <Icon name="check" size={13} color={colors.onPrimary} />}</View>
   </Pressable>;
 }
 
 const styles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: colors.backdrop },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: colors.scrim },
   anchor: { flex: 1, justifyContent: 'flex-end' },
-  sheet: { backgroundColor: colors.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, maxHeight: '90%' },
-  handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.border, alignSelf: 'center', marginBottom: 12 },
+  sheet: { backgroundColor: colors.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, maxHeight: '90%' },
+  handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.outlineVariant, alignSelf: 'center', marginBottom: 12 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
   title: { flex: 1 },
-  close: { width: 32, height: 32, borderRadius: 16, backgroundColor: colors.surfaceMuted, alignItems: 'center', justifyContent: 'center' },
+  close: { width: 32, height: 32, borderRadius: 16, backgroundColor: colors.surfaceContainer, alignItems: 'center', justifyContent: 'center' },
   body: { gap: 12, paddingBottom: 12 },
-  toggle: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: radius.md, borderWidth: 1.5, borderColor: colors.border, backgroundColor: colors.surface },
+  toggle: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: shape.lg, borderWidth: 1.5, borderColor: colors.outlineVariant, backgroundColor: colors.surfaceContainerLowest },
   toggleIcon: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
   toggleText: { flex: 1, gap: 1 },
-  check: { width: 24, height: 24, borderRadius: 12, borderWidth: 1.5, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
+  check: { width: 24, height: 24, borderRadius: 12, borderWidth: 1.5, borderColor: colors.outlineVariant, alignItems: 'center', justifyContent: 'center' },
   flowBlock: { gap: 8, paddingHorizontal: 4 },
   flows: { flexDirection: 'row', gap: 8 },
-  flow: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 12, borderRadius: radius.sm, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
+  flow: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 12, borderRadius: shape.md, backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant },
   flowActive: { backgroundColor: colors.period, borderColor: colors.period },
   drops: { flexDirection: 'row', height: 14, alignItems: 'center' },
-  flowText: { color: colors.text, fontSize: 13, fontWeight: '600' },
+  flowText: { color: colors.onSurface, fontSize: 13, fontWeight: '600' },
   flowTextActive: { color: colors.onPrimary },
-  noteBox: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: radius.md, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
-  note: { flex: 1, minHeight: 60, color: colors.text, fontSize: 15, textAlignVertical: 'top', padding: 0 },
+  noteBox: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: shape.lg, backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant },
+  note: { flex: 1, minHeight: 60, color: colors.onSurface, fontSize: 15, textAlignVertical: 'top', padding: 0 },
   actions: { gap: 4, paddingTop: 4 },
 });

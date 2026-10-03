@@ -13,7 +13,7 @@ import { Screen } from '@/components/Screen';
 import { addDays, currentPeriod, dayClassifier, daysBetween, isoDate, parseDate, recentRange, startOfMonth, todayIso } from '@/cycle';
 import { useI18n } from '@/i18n';
 import { usePreferences } from '@/preferences';
-import { colors, space, typography } from '@/theme';
+import { colors, space, typeScale } from '@/theme';
 
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
@@ -131,7 +131,7 @@ export default function Calendar() {
       <CycleHero prediction={prediction} records={recent}>
         <View style={styles.heroAction}>
           {todayRecord?.is_period
-            ? <Button label={t('cycle.editToday')} icon="edit" variant="secondary" onPress={() => setDraft(toDraft(todayRecord, today))} />
+            ? <Button label={t('cycle.editToday')} icon="edit" variant="outline" onPress={() => setDraft(toDraft(todayRecord, today))} />
             : period.day > 0
               ? <Button label={t('cycle.continueToday')} icon="drop" loading={saving} onPress={continuePeriod} />
               : <Button label={t('cycle.logToday')} icon="drop" variant={periodSoon ? 'primary' : 'secondary'} onPress={() => setDraft(toDraft(todayRecord, today, true))} />}
@@ -155,7 +155,7 @@ export default function Calendar() {
         record={byDate.get(selected)}
         action={selected <= today
           ? <Button label={byDate.has(selected) ? t('day.edit') : t('day.add')} icon={byDate.has(selected) ? 'edit' : 'plus'} variant="secondary" onPress={() => setDraft(toDraft(byDate.get(selected), selected, likelyPeriod(selected)))} />
-          : <Text style={typography.caption}>{t('day.future')}</Text>}
+          : <Text style={typeScale.bodyMedium}>{t('day.future')}</Text>}
       />
     </Screen>
     <DaySheet draft={draft} onChange={setDraft} onClose={() => !saving && setDraft(null)} onSave={save} onClear={clear} saving={saving} canClear={!!draft && byDate.has(draft.date)} />
@@ -164,5 +164,5 @@ export default function Calendar() {
 
 const styles = StyleSheet.create({
   heroAction: { marginTop: space.md, gap: space.md },
-  heroHint: { color: colors.muted, fontSize: 14, lineHeight: 20, textAlign: 'center' },
+  heroHint: { color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20, textAlign: 'center' },
 });

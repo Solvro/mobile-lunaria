@@ -13,7 +13,7 @@ import { Screen } from '@/components/Screen';
 import { Switch } from '@/components/Switch';
 import { useI18n } from '@/i18n';
 import { usePreferences, type Language, type WeekStart } from '@/preferences';
-import { colors, radius, space, typography } from '@/theme';
+import { colors, shape, space, typeScale } from '@/theme';
 
 type DestructiveAction = 'cycle-data' | 'account' | null;
 
@@ -77,30 +77,30 @@ export default function Settings() {
   return <>
     <Screen title={t('settings.title')}>
       <Card>
-        <Text style={typography.heading}>{t('settings.mode')}</Text>
+        <Text style={typeScale.titleLarge}>{t('settings.mode')}</Text>
         <View style={styles.switchRow}>
           <View style={styles.flex}>
-            <Text style={typography.bodyStrong}>{t('settings.trackOwn')}</Text>
-            <Text style={typography.caption}>{tracksCycle ? t('settings.trackOwnOn') : t('settings.trackOwnOff')}</Text>
+            <Text style={typeScale.titleMedium}>{t('settings.trackOwn')}</Text>
+            <Text style={typeScale.bodyMedium}>{tracksCycle ? t('settings.trackOwnOn') : t('settings.trackOwnOff')}</Text>
           </View>
           <Switch value={tracksCycle} onValueChange={changeTracksCycle} accessibilityLabel={t('settings.trackOwn')} />
         </View>
       </Card>
 
       <Card>
-        <Text style={typography.heading}>{t('settings.language')}</Text>
+        <Text style={typeScale.titleLarge}>{t('settings.language')}</Text>
         <Segmented<Language> value={language} options={[{ value: 'pl', label: 'Polski' }, { value: 'en', label: 'English' }]} onChange={(value) => save(() => setLanguage(value))} />
-        <Text style={[typography.heading, styles.spaced]}>{t('settings.weekStart')}</Text>
+        <Text style={[typeScale.titleLarge, styles.spaced]}>{t('settings.weekStart')}</Text>
         <Segmented<WeekStart> value={weekStart} options={[{ value: 'monday', label: t('settings.monday') }, { value: 'sunday', label: t('settings.sunday') }]} onChange={(value) => save(() => setWeekStart(value))} />
       </Card>
 
       <Card>
-        <Text style={typography.heading}>{t('settings.account')}</Text>
+        <Text style={typeScale.titleLarge}>{t('settings.account')}</Text>
         <View style={styles.accountRow}>
           <View style={styles.avatar}><Icon name="person" size={20} color={colors.primary} /></View>
           <View style={styles.flex}>
-            <Text style={typography.bodyStrong}>{session?.account.display_name}</Text>
-            <Text style={typography.caption}>{session?.account.email}</Text>
+            <Text style={typeScale.titleMedium}>{session?.account.display_name}</Text>
+            <Text style={typeScale.bodyMedium}>{session?.account.email}</Text>
           </View>
         </View>
         <Button label={t('settings.export')} icon="share" variant="secondary" onPress={exportData} loading={exporting} />
@@ -108,8 +108,8 @@ export default function Settings() {
       </Card>
 
       <View style={styles.danger}>
-        <Text style={[typography.heading, styles.dangerTitle]}>{t('settings.dangerZone')}</Text>
-        <Text style={typography.caption}>{t('settings.dangerBody')}</Text>
+        <Text style={[typeScale.titleLarge, styles.dangerTitle]}>{t('settings.dangerZone')}</Text>
+        <Text style={typeScale.bodyMedium}>{t('settings.dangerBody')}</Text>
         {tracksCycle && <Button label={t('settings.deleteCycle')} variant="danger" onPress={() => setDestructiveAction('cycle-data')} />}
         <Button label={t('settings.deleteAccount')} variant="danger" onPress={() => setDestructiveAction('account')} />
       </View>
@@ -133,7 +133,7 @@ function Segmented<T extends string>({ value, options, onChange }: { value: T; o
     {options.map((option, index) => {
       const active = option.value === value;
       return <Pressable key={option.value} onPress={() => onChange(option.value)} style={[styles.segment, index > 0 && styles.segmentDivider, active && styles.segmentActive]} accessibilityRole="radio" accessibilityState={{ selected: active }}>
-        {active && <Icon name="check" size={16} color={colors.text} />}
+        {active && <Icon name="check" size={16} color={colors.onSurface} />}
         <Text style={[styles.segmentText, active && styles.segmentTextActive]}>{option.label}</Text>
       </Pressable>;
     })}
@@ -145,15 +145,15 @@ const styles = StyleSheet.create({
   spaced: { marginTop: 16 },
   switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   // Material 3 segmented buttons: outlined pill, selected segment tinted with a check.
-  segmented: { flexDirection: 'row', borderWidth: 1, borderColor: colors.outline, borderRadius: radius.pill, overflow: 'hidden' },
+  segmented: { flexDirection: 'row', borderWidth: 1, borderColor: colors.outline, borderRadius: shape.full, overflow: 'hidden' },
   segment: { flex: 1, minHeight: 48, flexDirection: 'row', gap: space.sm, alignItems: 'center', justifyContent: 'center' },
   segmentDivider: { borderLeftWidth: 1, borderLeftColor: colors.outline },
-  segmentActive: { backgroundColor: colors.primarySoft },
-  segmentText: { color: colors.text, fontWeight: '500', fontSize: 15 },
+  segmentActive: { backgroundColor: colors.primaryContainer },
+  segmentText: { color: colors.onSurface, fontWeight: '500', fontSize: 15 },
   segmentTextActive: { fontWeight: '700' },
   accountRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  danger: { borderWidth: 1, borderColor: colors.dangerSoft, borderRadius: radius.lg, padding: space.lg, gap: space.md },
-  disclaimer: { ...typography.caption, fontSize: 13, textAlign: 'center', paddingHorizontal: space.md },
-  dangerTitle: { color: colors.danger },
+  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primaryContainer, alignItems: 'center', justifyContent: 'center' },
+  danger: { borderWidth: 1, borderColor: colors.errorContainer, borderRadius: shape.xl, padding: space.lg, gap: space.md },
+  disclaimer: { ...typeScale.bodyMedium, fontSize: 13, textAlign: 'center', paddingHorizontal: space.md },
+  dangerTitle: { color: colors.error },
 });

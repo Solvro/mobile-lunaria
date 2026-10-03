@@ -1,54 +1,70 @@
 import { StyleSheet } from 'react-native';
 
-// Contrast ratios checked against WCAG AA: every text/background pair below is >= 4.5:1.
+/**
+ * Lunaria design system, built on Material 3 roles.
+ *
+ * - colors: M3 color roles from a berry seed, plus cycle-specific roles (period / fertile / intimacy).
+ *   Every on-* / text pair is checked against WCAG AA (>= 4.5:1).
+ * - type: the M3 type scale. Use these instead of ad-hoc font sizes.
+ * - shape: M3 corner sizes. Cards use `xl`, buttons/chips/indicators use `full`.
+ * - space: 4pt grid. Screens use `lg` between sections, cards use `lg` inside.
+ * - elevation, motion: M3 levels and the "emphasized" easing curve.
+ */
 export const colors = {
-  background: '#FFF8F4',
-  surface: '#FFFFFF',
-  surfaceMuted: '#F7EEEA',
-  border: '#EEE2DD',
-  outline: '#857379',
-  text: '#2A1E2E',
-  muted: '#6B5E6E',
+  // Brand
   primary: '#B8325A',
-  primarySoft: '#FBE7EC',
   onPrimary: '#FFFFFF',
+  primaryContainer: '#FBE7EC',
+  onPrimaryContainer: '#5C1130',
+
+  // Neutral surfaces, lowest to highest emphasis
+  surface: '#FFF8F6',
+  surfaceContainerLowest: '#FFFFFF',
+  surfaceContainer: '#F7EEEA',
+  surfaceContainerHigh: '#F0E4E0',
+  onSurface: '#2A1E2E',
+  onSurfaceVariant: '#6B5E6E',
+  outline: '#857379',
+  outlineVariant: '#EEE2DD',
+  scrim: '#2A1E2E66',
+
+  // Cycle
   period: '#CF3A55',
-  periodSoft: '#FDE4E7',
-  periodText: '#A8334F',
+  onPeriod: '#FFFFFF',
+  periodContainer: '#FDE4E7',
+  onPeriodContainer: '#A8334F',
   fertile: '#2E7F79',
-  fertileSoft: '#DDF2EF',
-  fertileBand: '#BFE6E1',
-  fertileText: '#17605B',
+  fertileContainer: '#BFE6E1',
+  fertileSurface: '#DDF2EF',
+  onFertileContainer: '#17605B',
   intimacy: '#7B5EA7',
-  danger: '#B3261E',
-  dangerSoft: '#FBE9E7',
-  backdrop: '#2A1E2E66',
+
+  // Feedback
+  error: '#B3261E',
+  errorContainer: '#FBE9E7',
 };
 
-export const radius = { sm: 12, md: 16, lg: 28, pill: 999 };
+export const typeScale = StyleSheet.create({
+  displaySmall: { color: colors.onSurface, fontSize: 36, lineHeight: 44, fontWeight: '700', letterSpacing: -0.5 },
+  headlineLarge: { color: colors.onSurface, fontSize: 40, lineHeight: 48, fontWeight: '800', letterSpacing: -1 },
+  headlineMedium: { color: colors.onSurface, fontSize: 28, lineHeight: 36, fontWeight: '700', letterSpacing: -0.3 },
+  titleLarge: { color: colors.onSurface, fontSize: 22, lineHeight: 28, fontWeight: '700' },
+  titleMedium: { color: colors.onSurface, fontSize: 16, lineHeight: 24, fontWeight: '600', letterSpacing: 0.15 },
+  bodyLarge: { color: colors.onSurface, fontSize: 16, lineHeight: 24, letterSpacing: 0.2 },
+  bodyMedium: { color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20, letterSpacing: 0.25 },
+  labelLarge: { color: colors.onSurface, fontSize: 14, lineHeight: 20, fontWeight: '600', letterSpacing: 0.1 },
+  labelMedium: { color: colors.onSurfaceVariant, fontSize: 12, lineHeight: 16, fontWeight: '600', letterSpacing: 0.5 },
+});
 
-// Generous by default; tighten later if needed.
+export const shape = { xs: 4, sm: 8, md: 12, lg: 16, xl: 28, full: 999 };
+
 export const space = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32, xxl: 48 };
+
+export const elevation = StyleSheet.create({
+  // iOS-only soft shadow; Android elevation shadows flash grey during tab cross-fades, so cards rely on their outline there.
+  level1: { shadowColor: colors.onSurface, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8 },
+  level2: { shadowColor: colors.onSurface, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.08, shadowRadius: 16, elevation: 3 },
+});
 
 // Material 3 "emphasized" motion.
 export const motion = { duration: 300, easing: [0.2, 0, 0, 1] as const };
-
-export const typography = StyleSheet.create({
-  display: { color: colors.text, fontSize: 34, lineHeight: 40, fontWeight: '700', letterSpacing: -0.6 },
-  title: { color: colors.text, fontSize: 28, lineHeight: 34, fontWeight: '700', letterSpacing: -0.4 },
-  heading: { color: colors.text, fontSize: 19, lineHeight: 24, fontWeight: '700' },
-  body: { color: colors.text, fontSize: 16, lineHeight: 23 },
-  bodyStrong: { color: colors.text, fontSize: 16, lineHeight: 23, fontWeight: '600' },
-  caption: { color: colors.muted, fontSize: 14, lineHeight: 20 },
-  label: { color: colors.muted, fontSize: 13, lineHeight: 18, fontWeight: '600' },
-});
-
-export const shadow = StyleSheet.create({
-  card: {
-    shadowColor: '#2A1E2E',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
-    elevation: 2,
-  },
-}).card;

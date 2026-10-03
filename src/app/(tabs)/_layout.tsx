@@ -36,7 +36,7 @@ function TabsNavigator() {
     tabBar={(props) => <NavigationBar {...props} />}
     screenOptions={{
       headerShown: false,
-      sceneStyle: { backgroundColor: colors.background },
+      sceneStyle: { backgroundColor: colors.surface },
       sceneStyleInterpolator: sharedAxisX,
       transitionSpec: { animation: 'timing', config: { duration: motion.duration, easing: Easing.bezier(...motion.easing) } },
     }}

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { Prediction } from '@/api/types';
 import { addDays, currentPeriod, daysBetween, isoDate, parseDate, todayIso, type DayRecordLike } from '@/cycle';
 import { useI18n } from '@/i18n';
-import { colors, radius, shadow, space, typography } from '@/theme';
+import { colors, shape, elevation, space, typeScale } from '@/theme';
 
 // The headline card: where you are in the cycle right now, in one glance.
 export function CycleHero({ prediction, records, partnerName, children }: { prediction: Prediction | null; records: DayRecordLike[]; partnerName?: string; children?: React.ReactNode }) {
@@ -39,19 +39,19 @@ export function CycleHero({ prediction, records, partnerName, children }: { pred
     big = false;
   }
 
-  const background = tone === 'period' ? colors.periodSoft : tone === 'fertile' ? colors.fertileSoft : colors.surface;
+  const background = tone === 'period' ? colors.periodContainer : tone === 'fertile' ? colors.fertileSurface : colors.surfaceContainerLowest;
   const expected = prediction && parseDate(prediction.next_period_start).toLocaleDateString(locale, { day: 'numeric', month: 'long' });
   const hideLate = !!partnerName && untilPeriod !== null && untilPeriod < 0;
   const details = [
     period.day > 0 && !period.confirmed && !partnerName && t('cycle.notLoggedToday'),
     period.day === 0 && !hideLate && expected && t('cycle.expected', { date: expected }),
-    !hideLate && prediction?.current_cycle_day && t('cycle.cycleDay', { day: prediction.current_cycle_day }),
+    !hideLate && period.day === 0 && prediction?.current_cycle_day && t('cycle.cycleDay', { day: prediction.current_cycle_day }),
   ].filter(Boolean);
 
-  return <View style={[styles.card, { backgroundColor: background }]}>
+  return <View style={[styles.card, { backgroundColor: background, borderColor: tone === 'neutral' ? colors.outlineVariant : background }]}>
     {eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
     <Text style={big ? styles.headline : styles.headlineText} accessibilityRole="header" numberOfLines={big ? 1 : undefined} adjustsFontSizeToFit={big}>{headline}</Text>
-    {details.length > 0 && <Text style={typography.caption}>{details.join(' · ')}</Text>}
+    {details.length > 0 && <Text style={typeScale.bodyMedium}>{details.join(' · ')}</Text>}
     {(fertileToday || ovulationToday) && <View style={styles.chips}>
       <View style={styles.chip}><View style={styles.chipDot} /><Text style={styles.chipText}>{ovulationToday ? t('cycle.ovulationToday') : t('cycle.fertileToday')}</Text></View>
     </View>}
@@ -79,15 +79,15 @@ function CycleBar({ prediction }: { prediction: Prediction }) {
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: radius.lg, padding: space.lg, paddingTop: space.xl, gap: space.sm, ...shadow },
-  eyebrow: { color: colors.text, fontSize: 16, fontWeight: '600' },
-  headline: { color: colors.text, fontSize: 40, lineHeight: 46, fontWeight: '800', letterSpacing: -1 },
-  headlineText: { color: colors.text, fontSize: 22, lineHeight: 28, fontWeight: '700' },
+  card: { borderRadius: shape.xl, borderWidth: 1, padding: space.lg, paddingTop: space.xl, gap: space.sm, ...elevation.level1 },
+  eyebrow: { color: colors.onSurface, fontSize: 16, fontWeight: '600' },
+  headline: { color: colors.onSurface, fontSize: 40, lineHeight: 46, fontWeight: '800', letterSpacing: -1 },
+  headlineText: { color: colors.onSurface, fontSize: 22, lineHeight: 28, fontWeight: '700' },
   chips: { flexDirection: 'row', gap: 8 },
-  chip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: radius.pill, backgroundColor: colors.surface },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: shape.full, backgroundColor: colors.surfaceContainerLowest },
   chipDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.fertile },
-  chipText: { color: colors.fertileText, fontSize: 13, fontWeight: '700' },
-  bar: { height: 10, borderRadius: 5, backgroundColor: colors.surfaceMuted, marginTop: space.md },
+  chipText: { color: colors.onFertileContainer, fontSize: 13, fontWeight: '700' },
+  bar: { height: 10, borderRadius: 5, backgroundColor: colors.surfaceContainer, marginTop: space.md },
   segment: { position: 'absolute', top: 0, bottom: 0, borderRadius: 5 },
-  marker: { position: 'absolute', top: -4, width: 4, height: 18, marginLeft: -2, borderRadius: 2, backgroundColor: colors.text, borderWidth: 1, borderColor: colors.surface },
+  marker: { position: 'absolute', top: -4, width: 4, height: 18, marginLeft: -2, borderRadius: 2, backgroundColor: colors.onSurface, borderWidth: 1, borderColor: colors.surfaceContainerLowest },
 });

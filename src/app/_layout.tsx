@@ -8,6 +8,6 @@ import { colors } from '@/theme';
 export default function RootLayout() {
   return <SafeAreaProvider><PreferencesProvider><AuthProvider>
     <StatusBar style="dark" />
-    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right', contentStyle: { backgroundColor: colors.background } }} />
+    <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right', contentStyle: { backgroundColor: colors.surface } }} />
   </AuthProvider></PreferencesProvider></SafeAreaProvider>;
 }

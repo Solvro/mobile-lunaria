@@ -7,7 +7,7 @@ import { colors } from '@/theme';
 export default function Index() {
   const { ready, session, tracksCycle } = useAuth();
   const preferences = usePreferences();
-  if (!ready || !preferences.ready) return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background }}><ActivityIndicator color={colors.primary} /></View>;
+  if (!ready || !preferences.ready) return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface }}><ActivityIndicator color={colors.primary} /></View>;
   if (!session) return <Redirect href="/welcome" />;
   return <Redirect href={tracksCycle ? '/calendar' : '/partner'} />;
 }

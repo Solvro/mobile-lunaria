@@ -1,11 +1,12 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Icon, type IconName } from '@/components/Icon';
-import { colors, radius } from '@/theme';
+import { colors, shape } from '@/theme';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
+// M3 buttons: primary = filled, secondary = tonal, outline = outlined, ghost = text, danger = tonal error.
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 
 export function Button({ label, onPress, disabled = false, loading = false, variant = 'primary', icon }: { label: string; onPress: () => void; disabled?: boolean; loading?: boolean; variant?: Variant; icon?: IconName }) {
-  const foreground = variant === 'primary' ? colors.onPrimary : variant === 'danger' ? colors.danger : colors.primary;
+  const foreground = variant === 'primary' ? colors.onPrimary : variant === 'danger' ? colors.error : colors.primary;
   return <Pressable
     accessibilityRole="button"
     accessibilityState={{ disabled: disabled || loading, busy: loading }}
@@ -21,12 +22,13 @@ export function Button({ label, onPress, disabled = false, loading = false, vari
 }
 
 const styles = StyleSheet.create({
-  base: { minHeight: 52, paddingHorizontal: 20, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
+  base: { minHeight: 52, paddingHorizontal: 20, borderRadius: shape.full, alignItems: 'center', justifyContent: 'center' },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   primary: { backgroundColor: colors.primary },
-  secondary: { backgroundColor: colors.primarySoft },
+  secondary: { backgroundColor: colors.primaryContainer },
+  outline: { backgroundColor: 'transparent', borderWidth: 1, borderColor: colors.outline },
   ghost: { backgroundColor: 'transparent', minHeight: 44 },
-  danger: { backgroundColor: colors.dangerSoft },
+  danger: { backgroundColor: colors.errorContainer },
   label: { fontSize: 16, fontWeight: '700' },
   pressed: { opacity: 0.85, transform: [{ scale: 0.99 }] },
   disabled: { opacity: 0.5 },

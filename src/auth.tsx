@@ -48,7 +48,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     ready,
     tracksCycle: session?.account.tracks_cycle ?? true,
-    signIn: async (email, password) => { await store(await withTracksCycle(await api.signIn(email, password))); },
+    signIn: async (email, password) => {
+      const signedIn = await api.signIn(email, password);
+      // New device and the API doesn't know the mode: someone linked to a partner with no
+      // period data of their own is almost certainly only following.
+      const known = signedIn.account.tracks_cycle !== undefined || (await AsyncStorage.getItem(tracksCycleKey(signedIn.account.id))) !== null;
+      const prediction = !known && signedIn.account.linked_partner_id ? await api.predictions(signedIn.token).catch(() => undefined) : undefined;
+      const guess = prediction === undefined ? undefined : prediction !== null;
+      await store(await withTracksCycle(signedIn, guess));
+    },
     register: async (name, email, password, tracksCycle) => store(await withTracksCycle(await api.register(name, email, password, tracksCycle), tracksCycle)),
     updateAccount: async (account) => {
       if (!session) return;

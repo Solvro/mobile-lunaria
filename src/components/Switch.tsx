@@ -12,8 +12,9 @@ export function Switch({ value, onValueChange, disabled = false, accessibilityLa
   }, [value]);
 
   const thumbSize = progress.interpolate({ inputRange: [0, 1], outputRange: [16, 24] });
+  const thumbRadius = progress.interpolate({ inputRange: [0, 1], outputRange: [8, 12] });
   const translateX = progress.interpolate({ inputRange: [0, 1], outputRange: [6, 22] });
-  const trackColor = progress.interpolate({ inputRange: [0, 1], outputRange: [colors.surfaceMuted, colors.primary] });
+  const trackColor = progress.interpolate({ inputRange: [0, 1], outputRange: [colors.surfaceContainer, colors.primary] });
   const borderColor = progress.interpolate({ inputRange: [0, 1], outputRange: [colors.outline, colors.primary] });
   const thumbColor = progress.interpolate({ inputRange: [0, 1], outputRange: [colors.outline, colors.onPrimary] });
 
@@ -27,7 +28,7 @@ export function Switch({ value, onValueChange, disabled = false, accessibilityLa
     style={disabled && styles.disabled}
   >
     <Animated.View style={[styles.track, { backgroundColor: trackColor, borderColor }]}>
-      <Animated.View style={[styles.thumb, { width: thumbSize, height: thumbSize, backgroundColor: thumbColor, transform: [{ translateX }] }]}>
+      <Animated.View style={[styles.thumb, { width: thumbSize, height: thumbSize, borderRadius: thumbRadius, backgroundColor: thumbColor, transform: [{ translateX }] }]}>
         {value && <Icon name="check" size={14} color={colors.primary} />}
       </Animated.View>
     </Animated.View>
@@ -36,6 +37,6 @@ export function Switch({ value, onValueChange, disabled = false, accessibilityLa
 
 const styles = StyleSheet.create({
   track: { width: 52, height: 32, borderRadius: 16, borderWidth: 2, justifyContent: 'center' },
-  thumb: { borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  thumb: { alignItems: 'center', justifyContent: 'center' },
   disabled: { opacity: 0.38 },
 });
