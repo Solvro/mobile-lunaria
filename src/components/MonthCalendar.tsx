@@ -6,12 +6,11 @@ import { useI18n } from '@/i18n';
 import type { WeekStart } from '@/preferences';
 import { colors, space } from '@/theme';
 
-export type LegendKey = 'period' | 'predicted' | 'fertile' | 'ovulation' | 'intimacy' | 'today';
+export type LegendKey = 'period' | 'predicted' | 'predicted_ovulation' | 'intimacy' | 'today';
 
 // Every day is a circle; its fill says what kind of day it is.
-const fills: Record<Exclude<NonNullable<DayKind>, 'predicted'>, { background: string; text: string }> = {
+const fills: Record<Exclude<NonNullable<DayKind>, 'predicted' | 'predicted_ovulation'>, { background: string; text: string }> = {
   period: { background: colors.periodContainer, text: colors.onPeriodContainer },
-  fertile: { background: colors.fertileContainer, text: colors.onFertileContainer },
 };
 
 export function MonthCalendar({ month, onMonthChange, weekStart, classify, selected, onSelect, legend }: {
@@ -54,12 +53,11 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
       if (day.getMonth() !== month.getMonth()) return <View key={index} style={styles.cell} />;
       const iso = isoDate(day);
       const info = classify(iso);
-      const isExpectedFertile = info.ovulation && info.kind !== 'period';
-      const fill = info.kind && info.kind !== 'predicted' && !isExpectedFertile ? fills[info.kind] : null;
-      const expectedShade = info.kind === 'predicted' ? colors.periodContainer : isExpectedFertile ? colors.fertileContainer : null;
+       const fill = info.kind === 'period' ? fills.period : null;
+       const expectedShade = info.kind === 'predicted' ? colors.periodContainer : info.kind === 'predicted_ovulation' ? colors.fertileContainer : null;
       const isSelected = iso === selected;
       const isToday = iso === today;
-      const statuses = [info.kind && t(info.kind === 'period' ? 'calendar.period' : info.kind === 'predicted' ? 'calendar.predicted' : 'calendar.fertile'), info.ovulation && t('calendar.ovulation'), info.intimacy && t('calendar.intimacy'), isToday && t('common.today')].filter(Boolean);
+       const statuses = [info.kind && t(info.kind === 'period' ? 'calendar.period' : info.kind === 'predicted' ? 'calendar.predicted' : 'calendar.predictedOvulation'), info.intimacy && t('calendar.intimacy'), isToday && t('common.today')].filter(Boolean);
       return <Pressable
         key={index}
         style={styles.cell}
@@ -69,7 +67,7 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
         accessibilityLabel={[day.toLocaleDateString(locale, { day: 'numeric', month: 'long' }), ...statuses].join(', ')}
       >
         {/* Keyed by its look: Android (RN 0.86) drops the corner radius when the background changes on an existing view. */}
-        <View key={`${info.kind}-${isSelected}-${isToday}-${info.ovulation}-${size}`} style={[
+        <View key={`${info.kind}-${isSelected}-${isToday}-${size}`} style={[
           styles.circle,
           fill && { backgroundColor: fill.background },
           circleSize,
@@ -81,15 +79,15 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
         {info.intimacy && <View style={[styles.heart, { top: (CELL_HEIGHT + size) / 2 + space.xs }]}><Icon name="heart" size={10} color={colors.error} /></View>}
       </Pressable>;
     })}</View>)}
-    {legend.length > 0 && <View style={styles.legend}>{legend.map((key) => <LegendItem key={key} kind={key} label={key === 'today' ? t('common.today') : t(`calendar.${key}`)} />)}</View>}
+    {legend.length > 0 && <View style={styles.legend}>{legend.map((key) => <LegendItem key={key} kind={key} label={key === 'today' ? t('common.today') : key === 'predicted_ovulation' ? t('calendar.predictedOvulation') : t(`calendar.${key}`)} />)}</View>}
   </View>;
 }
 
 function LegendItem({ kind, label }: { kind: LegendKey; label: string }) {
-  const isExpected = kind === 'predicted' || kind === 'ovulation';
+   const isExpected = kind === 'predicted' || kind === 'predicted_ovulation';
   const color = kind === 'period' || kind === 'predicted'
     ? colors.periodContainer
-    : kind === 'fertile' || kind === 'ovulation'
+    : kind === 'predicted_ovulation'
       ? colors.fertileContainer
       : colors.primary;
   return <View style={styles.legendItem}>
@@ -103,7 +101,8 @@ function LegendItem({ kind, label }: { kind: LegendKey; label: string }) {
 }
 
 function Stripes({ color, size }: { color: string; size: number }) {
-  return <View pointerEvents="none" style={styles.stripeLayer}>{[-size / 2, 0, size / 2, size, size * 1.5].map((top) => <View key={top} style={[styles.stripe, { top, width: size * 2, left: -size / 2, backgroundColor: color }]} />)}</View>;
+  // A half-size interval doubles stripe density while retaining a clean diagonal hatch.
+  return <View pointerEvents="none" style={styles.stripeLayer}>{Array.from({ length: 10 }, (_, index) => -size / 2 + index * (size / 4)).map((top) => <View key={top} style={[styles.stripe, { top, width: size * 2, left: -size / 2, backgroundColor: color }]} />)}</View>;
 }
 
 const CIRCLE = 40;

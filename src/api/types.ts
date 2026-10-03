@@ -25,7 +25,7 @@ export type DailyRecord = {
 export type Prediction = {
   next_period_start: string;
   next_period_end: string;
-  ovulation_date: string;
+  predicted_ovulation_date: string;
   fertile_window_start: string;
   fertile_window_end: string;
   average_cycle_length: number;
