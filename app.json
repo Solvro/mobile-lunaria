@@ -2,6 +2,7 @@
   "expo": {
     "name": "Lunaria",
     "slug": "lunaria",
+    "scheme": "lunaria",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
