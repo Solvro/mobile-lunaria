@@ -1,24 +1,41 @@
 import { useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { PrimaryButton } from '@/components/PrimaryButton';
-import { colors } from '@/theme';
+import { KeyboardAvoidingView, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button } from '@/components/Button';
+import { useI18n } from '@/i18n';
+import { colors, radius, typography } from '@/theme';
 
 export function ConfirmationSheet({ visible, title, message, confirmation, confirmLabel, working, onCancel, onConfirm }: { visible: boolean; title: string; message: string; confirmation: string; confirmLabel: string; working: boolean; onCancel: () => void; onConfirm: () => Promise<void> }) {
+  const { t, locale } = useI18n();
+  const insets = useSafeAreaInsets();
   const [value, setValue] = useState('');
-  const confirmed = value.trim().toLowerCase() === confirmation.toLowerCase();
+  const confirmed = value.trim().toLocaleLowerCase(locale) === confirmation.toLocaleLowerCase(locale);
 
   async function confirm() {
     await onConfirm();
     setValue('');
   }
 
-  return <Modal transparent visible={visible} animationType="slide" onRequestClose={onCancel}><Pressable style={styles.backdrop} onPress={onCancel} /><View style={styles.sheet}><View style={styles.handle} /><Text style={styles.title}>{title}</Text><Text style={styles.message}>{message}</Text><Text style={styles.instruction}>Type {confirmation} to continue.</Text><TextInput value={value} onChangeText={setValue} autoCapitalize="none" autoCorrect={false} placeholder={confirmation} placeholderTextColor={colors.muted} style={styles.input} accessibilityLabel={`Type ${confirmation} to confirm`} /><PrimaryButton label={working ? 'Working...' : confirmLabel} onPress={confirm} disabled={!confirmed || working} /><Pressable onPress={onCancel} disabled={working}><Text style={styles.cancel}>Cancel</Text></Pressable></View></Modal>;
+  return <Modal transparent visible={visible} animationType="slide" onRequestClose={onCancel}>
+    <Pressable style={styles.backdrop} onPress={onCancel} accessibilityLabel={t('common.cancel')} />
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.anchor}>
+      <View style={[styles.sheet, { paddingBottom: insets.bottom + 16 }]}>
+        <View style={styles.handle} />
+        <Text style={typography.heading}>{title}</Text>
+        <Text style={typography.caption}>{message}</Text>
+        <Text style={typography.bodyStrong}>{t('confirm.type', { word: confirmation })}</Text>
+        <TextInput value={value} onChangeText={setValue} autoCapitalize="characters" autoCorrect={false} placeholder={confirmation} placeholderTextColor={colors.muted} style={styles.input} accessibilityLabel={t('confirm.type', { word: confirmation })} />
+        <Button label={confirmLabel} variant="danger" onPress={confirm} disabled={!confirmed} loading={working} />
+        <Button label={t('common.cancel')} variant="ghost" onPress={onCancel} disabled={working} />
+      </View>
+    </KeyboardAvoidingView>
+  </Modal>;
 }
 
 const styles = StyleSheet.create({
-  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: '#29152F88' },
-  sheet: { position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: colors.cream, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 22, gap: 14 },
-  handle: { width: 36, height: 4, borderRadius: 2, backgroundColor: colors.border, alignSelf: 'center' },
-  title: { color: colors.plum, fontSize: 22, fontWeight: '700' }, message: { color: colors.muted, fontSize: 14, lineHeight: 21 }, instruction: { color: colors.text, fontSize: 13, fontWeight: '600' },
-  input: { borderWidth: 1, borderColor: colors.border, borderRadius: 14, minHeight: 50, paddingHorizontal: 14, color: colors.text, fontSize: 16 }, cancel: { color: colors.muted, textAlign: 'center', fontWeight: '600', padding: 5 },
+  backdrop: { ...StyleSheet.absoluteFill, backgroundColor: colors.backdrop },
+  anchor: { flex: 1, justifyContent: 'flex-end' },
+  sheet: { backgroundColor: colors.background, borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, gap: 12 },
+  handle: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.border, alignSelf: 'center', marginBottom: 6 },
+  input: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.sm, minHeight: 52, paddingHorizontal: 14, color: colors.text, fontSize: 16 },
 });

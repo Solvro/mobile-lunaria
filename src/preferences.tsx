@@ -25,8 +25,12 @@ function isWeekStart(value: string | null): value is WeekStart {
   return value === 'monday' || value === 'sunday';
 }
 
+function deviceLanguage(): Language {
+  return Intl.DateTimeFormat().resolvedOptions().locale.toLowerCase().startsWith('pl') ? 'pl' : 'en';
+}
+
 export function PreferencesProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('en');
+  const [language, setLanguageState] = useState<Language>(deviceLanguage);
   const [weekStart, setWeekStartState] = useState<WeekStart>('monday');
   const [ready, setReady] = useState(false);
 

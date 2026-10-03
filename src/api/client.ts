@@ -36,10 +36,10 @@ export const api = {
     await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(session));
     return session;
   },
-  async register(display_name: string, email: string, password: string) {
+  async register(display_name: string, email: string, password: string, tracks_cycle: boolean) {
     const session = await request<Session>('/v1/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ display_name, email, password, accept_terms: true, accept_privacy: true, accept_data_processing: true }),
+      body: JSON.stringify({ display_name, email, password, tracks_cycle, accept_terms: true, accept_privacy: true, accept_data_processing: true }),
     });
     await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(session));
     return session;

@@ -1,26 +1,47 @@
 import { StyleSheet } from 'react-native';
 
+// Contrast ratios checked against WCAG AA: every text/background pair below is >= 4.5:1.
 export const colors = {
-  plum: '#172033',
-  plumSoft: '#24324A',
-  lavender: '#BFDBFE',
-  silver: '#CBD5E1',
-  cream: '#F8FAFC',
-  creamMuted: '#E8EEF6',
-  green: '#0F766E',
-  rose: '#F59E0B',
-  text: '#172033',
-  muted: '#64748B',
-  border: '#CBD5E1',
-  white: '#FFFFFF',
+  background: '#FFF8F4',
+  surface: '#FFFFFF',
+  surfaceMuted: '#F7EEEA',
+  border: '#EEE2DD',
+  text: '#2A1E2E',
+  muted: '#6B5E6E',
+  primary: '#B8325A',
+  primarySoft: '#FBE7EC',
+  onPrimary: '#FFFFFF',
+  period: '#CF3A55',
+  periodSoft: '#FDE4E7',
+  periodText: '#A8334F',
+  fertile: '#2E7F79',
+  fertileSoft: '#DDF2EF',
+  fertileBand: '#BFE6E1',
+  fertileText: '#17605B',
+  intimacy: '#7B5EA7',
+  danger: '#B3261E',
+  dangerSoft: '#FBE9E7',
+  backdrop: '#2A1E2E66',
 };
+
+export const radius = { sm: 12, md: 18, lg: 24, pill: 999 };
+
+export const typography = StyleSheet.create({
+  display: { color: colors.text, fontSize: 34, lineHeight: 40, fontWeight: '700', letterSpacing: -0.6 },
+  title: { color: colors.text, fontSize: 28, lineHeight: 34, fontWeight: '700', letterSpacing: -0.4 },
+  heading: { color: colors.text, fontSize: 19, lineHeight: 24, fontWeight: '700' },
+  body: { color: colors.text, fontSize: 16, lineHeight: 23 },
+  bodyStrong: { color: colors.text, fontSize: 16, lineHeight: 23, fontWeight: '600' },
+  caption: { color: colors.muted, fontSize: 14, lineHeight: 20 },
+  label: { color: colors.muted, fontSize: 13, lineHeight: 18, fontWeight: '600' },
+});
 
 export const shadow = StyleSheet.create({
   card: {
-    shadowColor: '#172033',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.08,
-    shadowRadius: 20,
-    elevation: 3,
+    shadowColor: '#2A1E2E',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 16,
+    elevation: 2,
   },
 }).card;

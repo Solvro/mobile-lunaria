@@ -6,6 +6,9 @@ export type Account = {
   linked_partner_id: string | null;
   agreements_accepted: boolean;
   sharing_scope?: SharingScope;
+  // Whether this person keeps their own calendar or only follows a partner's.
+  // Not yet stored by the API, so the app falls back to a per-account local value.
+  tracks_cycle?: boolean;
 };
 
 export type Session = { token: string; account: Account };
@@ -49,7 +52,8 @@ export type PartnerRequest = {
   created_at: string;
 };
 
-export type SharedDailyRecord = Pick<DailyRecord, 'date' | 'is_period' | 'intimacy'>;
+// Fields the owner doesn't share are omitted by the API.
+export type SharedDailyRecord = Pick<DailyRecord, 'date'> & Partial<Pick<DailyRecord, 'is_period' | 'intimacy'>>;
 
 export type PartnerView = {
   partner: Partner;
