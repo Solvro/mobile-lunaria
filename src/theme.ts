@@ -17,6 +17,12 @@ export const colors = {
   primaryContainer: '#FBE7EC',
   onPrimaryContainer: '#5C1130',
 
+  // Calendar palette
+  midnightViolet: '#2A1E2E',
+  mauve: '#DBBBF5',
+  beige: '#EAF2D7',
+  icyAqua: '#AEF3E7',
+
   // Neutral surfaces, lowest to highest emphasis
   surface: '#FFF8F6',
   surfaceContainerLowest: '#FFFFFF',
@@ -29,18 +35,18 @@ export const colors = {
   scrim: '#2A1E2E66',
 
   // Cycle
-  period: '#CF3A55',
+  period: '#B8325A',
   onPeriod: '#FFFFFF',
-  periodContainer: '#FFE5DC',
-  onPeriodContainer: '#87311E',
-  expectedPeriod: '#DB6B45',
+  periodContainer: '#EAF2D7',
+  onPeriodContainer: '#2A1E2E',
+  expectedPeriod: '#B8325A',
   fertile: '#2E7F79',
-  fertileContainer: '#BFE6E1',
+  fertileContainer: '#AEF3E7',
   fertileSurface: '#DDF2EF',
-  onFertileContainer: '#17605B',
-  expectedOvulation: '#087C83',
-  calendarToday: '#3567C8',
-  calendarSelected: '#64408F',
+  onFertileContainer: '#2A1E2E',
+  expectedOvulation: '#2A1E2E',
+  calendarToday: '#DBBBF5',
+  calendarSelected: '#2A1E2E',
   intimacy: '#7B5EA7',
 
   // Feedback
