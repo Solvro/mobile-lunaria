@@ -8,18 +8,19 @@ import { useAuth } from '@/auth';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { PodMark } from '@/components/PodMark';
 import { colors, shadow } from '@/theme';
+import { usePreferences } from '@/preferences';
 
 type Draft = Pick<DailyRecord, 'date' | 'is_period' | 'flow' | 'intimacy' | 'note'>;
-const weekdays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 const flowLevels: NonNullable<DailyRecord['flow']>[] = ['spotting', 'light', 'medium', 'heavy'];
 
 function isoDate(date: Date) { return date.toISOString().slice(0, 10); }
 function startOfMonth(date: Date) { return new Date(date.getFullYear(), date.getMonth(), 1); }
 function addDays(date: Date, days: number) { const copy = new Date(date); copy.setDate(copy.getDate() + days); return copy; }
-function formatMonth(date: Date) { return date.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }); }
+function formatMonth(date: Date, locale: string) { return date.toLocaleDateString(locale, { month: 'long', year: 'numeric' }); }
 
 export default function Calendar() {
   const { session } = useAuth();
+  const { language, weekStart } = usePreferences();
   const [month, setMonth] = useState(startOfMonth(new Date()));
   const [records, setRecords] = useState<DailyRecord[]>([]);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
@@ -44,19 +45,22 @@ export default function Calendar() {
     catch (error) { Alert.alert('Could not save', error instanceof Error ? error.message : 'Try again.'); }
   }
   const byDate = new Map(records.map((record) => [record.date, record]));
-  const days = Array.from({ length: 42 }, (_, index) => addDays(month, index - ((month.getDay() + 6) % 7)));
+  const locale = language === 'pl' ? 'pl-PL' : 'en-US';
+  const weekdays = weekdayNames(locale, weekStart);
+  const firstDayOffset = weekStart === 'monday' ? (month.getDay() + 6) % 7 : month.getDay();
+  const days = Array.from({ length: 42 }, (_, index) => addDays(month, index - firstDayOffset));
 
   return <SafeAreaView style={styles.page} edges={['top']}><ScrollView contentContainerStyle={styles.content}>
     <View style={styles.header}><View><Text style={styles.eyebrow}>YOUR CYCLE</Text><Text style={styles.title}>A gentle record.</Text></View><Pressable onPress={() => router.push('/sharing')} accessibilityLabel="Open sharing"><PodMark size={35} /></Pressable></View>
     <View style={[styles.insight, shadow]}><View><Text style={styles.insightLabel}>NEXT EXPECTED PERIOD</Text><Text style={styles.insightValue}>{prediction ? friendlyDate(prediction.next_period_start) : 'Learning from your history'}</Text><Text style={styles.insightNote}>{prediction ? `${confidenceLabel(prediction.confidence)} confidence` : 'Add period days to create an estimate.'}</Text></View><View style={styles.crescent}><PodMark size={45} /></View></View>
-    <View style={styles.calendarCard}><View style={styles.monthHeader}><Pressable hitSlop={12} onPress={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}><Text style={styles.arrow}>‹</Text></Pressable><Text style={styles.month}>{formatMonth(month)}</Text><Pressable hitSlop={12} onPress={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}><Text style={styles.arrow}>›</Text></Pressable></View>
+    <View style={styles.calendarCard}><View style={styles.monthHeader}><Pressable hitSlop={12} onPress={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}><Text style={styles.arrow}>‹</Text></Pressable><Text style={styles.month}>{formatMonth(month, locale)}</Text><Pressable hitSlop={12} onPress={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}><Text style={styles.arrow}>›</Text></Pressable></View>
       <View style={styles.grid}>{weekdays.map((day, index) => <Text key={`${day}${index}`} style={styles.weekday}>{day}</Text>)}{days.map((day) => <Day key={isoDate(day)} date={day} inMonth={day.getMonth() === month.getMonth()} record={byDate.get(isoDate(day))} prediction={prediction} onPress={() => setDraft(toDraft(byDate.get(isoDate(day)), isoDate(day)))} />)}</View>
       <View style={styles.legend}><Legend color={colors.rose} label="Logged period" /><Legend color={colors.lavender} label="Estimated" /><Legend color={colors.green} label="Intimacy" /></View>
     </View>
     <Pressable onPress={() => { setMonth(startOfMonth(new Date())); }} style={styles.today}><Text style={styles.todayText}>Return to today</Text></Pressable>
     <View style={styles.disclaimer}><Text style={styles.disclaimerTitle}>Estimates, not instructions</Text><Text style={styles.disclaimerText}>Lunaria uses your recorded history to offer informational estimates. It is not medical advice, contraception, or pregnancy planning guidance.</Text></View>
     {loading && <ActivityIndicator color={colors.plum} style={styles.loading} />}
-  </ScrollView><RecordEditor draft={draft} setDraft={setDraft} onSave={saveDraft} onDelete={async () => { const record = draft && byDate.get(draft.date); if (record && token) { await api.deleteRecord(token, record.id); } setDraft(null); refresh(); }} /></SafeAreaView>;
+  </ScrollView><RecordEditor locale={locale} draft={draft} setDraft={setDraft} onSave={saveDraft} onDelete={async () => { const record = draft && byDate.get(draft.date); if (record && token) { await api.deleteRecord(token, record.id); } setDraft(null); refresh(); }} /></SafeAreaView>;
 }
 
 function Day({ date, inMonth, record, prediction, onPress }: { date: Date; inMonth: boolean; record?: DailyRecord; prediction: Prediction | null; onPress: () => void }) {
@@ -65,12 +69,13 @@ function Day({ date, inMonth, record, prediction, onPress }: { date: Date; inMon
 }
 function Legend({ color, label }: { color: string; label: string }) { return <View style={styles.legendItem}><View style={[styles.legendDot, { backgroundColor: color }]} /><Text style={styles.legendText}>{label}</Text></View>; }
 function toDraft(record: DailyRecord | undefined, date: string): Draft { return record ? { date, is_period: record.is_period, flow: record.flow, intimacy: record.intimacy, note: record.note } : { date, is_period: false, flow: null, intimacy: false, note: null }; }
-function friendlyDate(date: string) { return new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
+function weekdayNames(locale: string, weekStart: 'monday' | 'sunday') { const sunday = new Date(2023, 0, 1); return Array.from({ length: 7 }, (_, index) => addDays(sunday, index + (weekStart === 'monday' ? 1 : 0)).toLocaleDateString(locale, { weekday: 'narrow' })); }
+function friendlyDate(date: string, locale?: string) { return new Date(`${date}T12:00:00`).toLocaleDateString(locale, { month: 'short', day: 'numeric' }); }
 function confidenceLabel(value: Prediction['confidence']) { return value.replace('_', ' '); }
 
-function RecordEditor({ draft, setDraft, onSave, onDelete }: { draft: Draft | null; setDraft: (value: Draft | null) => void; onSave: () => void; onDelete: () => void }) {
+function RecordEditor({ locale, draft, setDraft, onSave, onDelete }: { locale: string; draft: Draft | null; setDraft: (value: Draft | null) => void; onSave: () => void; onDelete: () => void }) {
   if (!draft) return null;
-  return <Modal transparent animationType="slide" onRequestClose={() => setDraft(null)}><Pressable style={styles.backdrop} onPress={() => setDraft(null)} /><View style={styles.sheet}><View style={styles.handle} /><Text style={styles.sheetDate}>{friendlyDate(draft.date)}</Text><View style={styles.toggleRow}><View><Text style={styles.toggleLabel}>Period day</Text><Text style={styles.toggleHint}>Observed information</Text></View><Switch value={draft.is_period} onValueChange={(is_period) => setDraft({ ...draft, is_period, flow: is_period ? draft.flow ?? 'medium' : null })} trackColor={{ true: colors.rose }} /></View>
+  return <Modal transparent animationType="slide" onRequestClose={() => setDraft(null)}><Pressable style={styles.backdrop} onPress={() => setDraft(null)} /><View style={styles.sheet}><View style={styles.handle} /><Text style={styles.sheetDate}>{friendlyDate(draft.date, locale)}</Text><View style={styles.toggleRow}><View><Text style={styles.toggleLabel}>Period day</Text><Text style={styles.toggleHint}>Observed information</Text></View><Switch value={draft.is_period} onValueChange={(is_period) => setDraft({ ...draft, is_period, flow: is_period ? draft.flow ?? 'medium' : null })} trackColor={{ true: colors.rose }} /></View>
     {draft.is_period && <View style={styles.flows}>{flowLevels.map((flow) => <Pressable key={flow} onPress={() => setDraft({ ...draft, flow })} style={[styles.flow, draft.flow === flow && styles.selectedFlow]}><Text style={[styles.flowText, draft.flow === flow && styles.selectedFlowText]}>{flow}</Text></Pressable>)}</View>}
     <View style={styles.toggleRow}><View><Text style={styles.toggleLabel}>Intimacy</Text><Text style={styles.toggleHint}>Private unless you choose otherwise</Text></View><Switch value={draft.intimacy} onValueChange={(intimacy) => setDraft({ ...draft, intimacy })} trackColor={{ true: colors.green }} /></View>
     <TextInput value={draft.note ?? ''} onChangeText={(note) => setDraft({ ...draft, note: note || null })} multiline placeholder="Private note (optional)" placeholderTextColor={colors.muted} style={styles.note} />

@@ -29,3 +29,14 @@ export type Prediction = {
   current_cycle_day: number | null;
   confidence: 'very_low' | 'low' | 'medium' | 'high';
 };
+
+export type Partner = {
+  id: string;
+  display_name: string;
+};
+
+export type PartnerView = {
+  partner: Partner;
+  records: DailyRecord[];
+  prediction: Prediction | null;
+};

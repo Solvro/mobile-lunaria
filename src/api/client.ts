@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import type { DailyRecord, Prediction, Session } from './types';
+import type { DailyRecord, Partner, PartnerView, Prediction, Session } from './types';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000';
 const SESSION_KEY = 'lunaria.session';
@@ -52,5 +52,23 @@ export const api = {
   },
   predictions(token: string) {
     return request<Prediction>('/v1/predictions', {}, token);
+  },
+  partner(token: string) {
+    return request<Partner | null>('/v1/partner', {}, token);
+  },
+  linkPartner(token: string, code: string) {
+    return request<Partner>('/v1/partner/link', { method: 'POST', body: JSON.stringify({ code }) }, token);
+  },
+  unlinkPartner(token: string) {
+    return request<void>('/v1/partner/link', { method: 'DELETE' }, token);
+  },
+  partnerView(token: string, start: string, end: string) {
+    return request<PartnerView>(`/v1/partner/records?start=${start}&end=${end}`, {}, token);
+  },
+  deleteCycleData(token: string) {
+    return request<void>('/v1/account/cycle-data', { method: 'DELETE' }, token);
+  },
+  deleteAccount(token: string) {
+    return request<void>('/v1/account', { method: 'DELETE' }, token);
   },
 };
