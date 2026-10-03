@@ -37,7 +37,8 @@ export type Partner = {
 };
 
 export type SharingScope = {
-  calendar: boolean;
+  period_days: boolean;
+  intimacy: boolean;
   predictions: boolean;
 };
 
@@ -48,7 +49,7 @@ export type PartnerRequest = {
   created_at: string;
 };
 
-export type SharedDailyRecord = Pick<DailyRecord, 'date' | 'is_period' | 'flow'>;
+export type SharedDailyRecord = Pick<DailyRecord, 'date' | 'is_period' | 'intimacy'>;
 
 export type PartnerView = {
   partner: Partner;

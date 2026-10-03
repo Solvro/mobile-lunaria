@@ -53,7 +53,7 @@ export default function Sharing() {
 
   async function updateScope(key: keyof SharingScope, value: boolean) {
     if (!token || !session) return;
-    const scope = { calendar: true, predictions: true, ...session.account.sharing_scope, [key]: value };
+    const scope = { period_days: true, intimacy: true, predictions: true, ...session.account.sharing_scope, [key]: value };
     setSavingScope(key);
     try { await updateAccount(await api.updateSharingScope(token, scope)); }
     catch (error) { Alert.alert('Could not update sharing', error instanceof Error ? error.message : 'Try again shortly.'); }
@@ -73,7 +73,7 @@ export default function Sharing() {
     ]);
   }
 
-  const scope = { calendar: true, predictions: true, ...session?.account.sharing_scope };
+  const scope = { period_days: true, intimacy: true, predictions: true, ...session?.account.sharing_scope };
   const incoming = partnerRequests.filter((request) => request.direction === 'incoming');
   const outgoing = partnerRequests.filter((request) => request.direction === 'outgoing');
 
@@ -82,8 +82,8 @@ export default function Sharing() {
     {loading ? <ActivityIndicator color={colors.plum} /> : <>{partner ? <View style={[styles.card, shadow]}><Text style={styles.cardLabel}>LINKED PARTNER</Text><Text style={styles.partnerName}>{partner.display_name}</Text><Text style={styles.note}>Their view is read-only and contains no private notes.</Text><PrimaryButton label="View shared calendar" onPress={() => router.push('/partner')} /><Pressable onPress={unlink} disabled={working}><Text style={styles.unlink}>{working ? 'Working...' : 'Unlink partner'}</Text></Pressable></View> : <View style={[styles.card, shadow]}><Text style={styles.cardLabel}>SEND A REQUEST</Text><Text style={styles.note}>Enter a partner's private code. They must accept before either of you is linked.</Text><TextInput value={code} onChangeText={setCode} autoCapitalize="characters" autoCorrect={false} placeholder="Partner's code" placeholderTextColor={colors.muted} style={styles.input} accessibilityLabel="Partner link code" /><PrimaryButton label={working ? 'Sending...' : 'Send request'} onPress={createRequest} disabled={!code.trim() || working} /></View>}
       {incoming.map((request) => <View key={request.id} style={[styles.card, shadow]}><Text style={styles.cardLabel}>INCOMING REQUEST</Text><Text style={styles.partnerName}>{request.partner.display_name}</Text><Text style={styles.note}>Accepting creates a shared, read-only connection.</Text><PrimaryButton label={working ? 'Working...' : 'Accept request'} onPress={() => respondToRequest(request, true)} disabled={working} /><Pressable onPress={() => respondToRequest(request, false)} disabled={working}><Text style={styles.unlink}>Reject request</Text></Pressable></View>)}
       {outgoing.map((request) => <View key={request.id} style={[styles.pendingCard, shadow]}><Text style={styles.cardLabel}>REQUEST SENT</Text><Text style={styles.partnerName}>{request.partner.display_name}</Text><Text style={styles.note}>Waiting for them to accept your request.</Text></View>)}
-      <View style={[styles.card, shadow]}><Text style={styles.cardLabel}>WHAT YOU SHARE</Text><ScopeRow label="Calendar" hint="Period days and flow only" value={scope.calendar} saving={savingScope === 'calendar'} onChange={(value) => updateScope('calendar', value)} /><ScopeRow label="Predictions" hint="Cycle estimates only" value={scope.predictions} saving={savingScope === 'predictions'} onChange={(value) => updateScope('predictions', value)} /><Text style={styles.note}>Private notes and intimacy details are never shared.</Text></View></>}
-    <View style={styles.boundary}><Text style={styles.boundaryTitle}>Private by default</Text><Text style={styles.boundaryText}>Your notes and intimacy details stay private. Linked views are read-only.</Text></View>
+      <View style={[styles.card, shadow]}><Text style={styles.cardLabel}>WHAT YOU SHARE</Text><ScopeRow label="Period days" hint="Whether a day is logged as a period day" value={scope.period_days} saving={savingScope === 'period_days'} onChange={(value) => updateScope('period_days', value)} /><ScopeRow label="Intimacy" hint="Whether intimacy is logged for a day" value={scope.intimacy} saving={savingScope === 'intimacy'} onChange={(value) => updateScope('intimacy', value)} /><ScopeRow label="Predictions" hint="Cycle estimate dates" value={scope.predictions} saving={savingScope === 'predictions'} onChange={(value) => updateScope('predictions', value)} /><Text style={styles.note}>Private notes and flow level are never shared.</Text></View></>}
+    <View style={styles.boundary}><Text style={styles.boundaryTitle}>Private by default</Text><Text style={styles.boundaryText}>Your notes and flow level stay private. Linked views are read-only.</Text></View>
   </ScrollView></SafeAreaView>;
 }
 
