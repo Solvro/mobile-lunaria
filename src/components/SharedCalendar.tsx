@@ -69,7 +69,7 @@ export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: { gap: 16 },
+  wrapper: { gap: 24 },
   loading: { marginVertical: 32 },
   notice: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', padding: 14, borderRadius: radius.md, backgroundColor: colors.surfaceMuted },
   noticeText: { flex: 1, color: colors.muted, fontSize: 14, lineHeight: 20 },

@@ -6,6 +6,7 @@ export const colors = {
   surface: '#FFFFFF',
   surfaceMuted: '#F7EEEA',
   border: '#EEE2DD',
+  outline: '#857379',
   text: '#2A1E2E',
   muted: '#6B5E6E',
   primary: '#B8325A',
@@ -24,7 +25,13 @@ export const colors = {
   backdrop: '#2A1E2E66',
 };
 
-export const radius = { sm: 12, md: 18, lg: 24, pill: 999 };
+export const radius = { sm: 12, md: 16, lg: 28, pill: 999 };
+
+// Generous by default; tighten later if needed.
+export const space = { xs: 4, sm: 8, md: 16, lg: 24, xl: 32, xxl: 48 };
+
+// Material 3 "emphasized" motion.
+export const motion = { duration: 300, easing: [0.2, 0, 0, 1] as const };
 
 export const typography = StyleSheet.create({
   display: { color: colors.text, fontSize: 34, lineHeight: 40, fontWeight: '700', letterSpacing: -0.6 },

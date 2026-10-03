@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, Share, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { api } from '@/api/client';
 import type { PartnerRequest, SharingScope } from '@/api/types';
@@ -8,6 +8,7 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Icon } from '@/components/Icon';
 import { Screen } from '@/components/Screen';
+import { Switch } from '@/components/Switch';
 import { SharedCalendar } from '@/components/SharedCalendar';
 import { useI18n } from '@/i18n';
 import { usePartnerLink } from '@/partnerLink';
@@ -178,7 +179,7 @@ function ScopeCard({ scope, saving, onChange }: { scope: SharingScope; saving: k
         <Text style={typography.bodyStrong}>{t(`partner.scope.${key}`)}</Text>
         <Text style={typography.caption}>{t(`partner.scope.${key}Hint`)}</Text>
       </View>
-      <Switch value={scope[key]} onValueChange={(value) => onChange(key, value)} disabled={saving === key} trackColor={{ true: colors.primary, false: colors.border }} thumbColor={colors.surface} accessibilityLabel={t(`partner.scope.${key}`)} />
+      <Switch value={scope[key]} onValueChange={(value) => saving !== key && onChange(key, value)} accessibilityLabel={t(`partner.scope.${key}`)} />
     </View>)}
     <View style={styles.privateNote}><Icon name="lock" size={14} color={colors.muted} /><Text style={[typography.caption, styles.flex]}>{t('partner.alwaysPrivate')}</Text></View>
   </Card>;
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
   shareButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, height: 44, borderRadius: radius.pill, backgroundColor: colors.surface },
   shareText: { color: colors.primary, fontWeight: '700', fontSize: 14 },
   or: { marginTop: 6 },
-  scopeCard: { gap: 12 },
-  scopeRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
+  scopeCard: { gap: 16 },
+  scopeRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingTop: 16, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   privateNote: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });

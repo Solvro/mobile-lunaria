@@ -31,7 +31,7 @@ export function DayDetails({ iso, info, record, action }: { iso: string; info: D
 }
 
 const styles = StyleSheet.create({
-  card: { gap: 10 },
+  card: { gap: 12 },
   header: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   today: { color: colors.primary, fontWeight: '700', fontSize: 13, backgroundColor: colors.primarySoft, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, overflow: 'hidden' },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { File, Paths } from 'expo-file-system';
 import { router } from 'expo-router';
 import * as Sharing from 'expo-sharing';
@@ -10,9 +10,10 @@ import { Card } from '@/components/Card';
 import { ConfirmationSheet } from '@/components/ConfirmationSheet';
 import { Icon } from '@/components/Icon';
 import { Screen } from '@/components/Screen';
+import { Switch } from '@/components/Switch';
 import { useI18n } from '@/i18n';
 import { usePreferences, type Language, type WeekStart } from '@/preferences';
-import { colors, radius, typography } from '@/theme';
+import { colors, radius, space, typography } from '@/theme';
 
 type DestructiveAction = 'cycle-data' | 'account' | null;
 
@@ -82,7 +83,7 @@ export default function Settings() {
             <Text style={typography.bodyStrong}>{t('settings.trackOwn')}</Text>
             <Text style={typography.caption}>{tracksCycle ? t('settings.trackOwnOn') : t('settings.trackOwnOff')}</Text>
           </View>
-          <Switch value={tracksCycle} onValueChange={changeTracksCycle} trackColor={{ true: colors.primary, false: colors.border }} thumbColor={colors.surface} accessibilityLabel={t('settings.trackOwn')} />
+          <Switch value={tracksCycle} onValueChange={changeTracksCycle} accessibilityLabel={t('settings.trackOwn')} />
         </View>
       </Card>
 
@@ -112,6 +113,7 @@ export default function Settings() {
         {tracksCycle && <Button label={t('settings.deleteCycle')} variant="danger" onPress={() => setDestructiveAction('cycle-data')} />}
         <Button label={t('settings.deleteAccount')} variant="danger" onPress={() => setDestructiveAction('account')} />
       </View>
+      <Text style={styles.disclaimer}>{t('cycle.disclaimer')}</Text>
     </Screen>
     <ConfirmationSheet
       visible={destructiveAction !== null}
@@ -128,9 +130,10 @@ export default function Settings() {
 
 function Segmented<T extends string>({ value, options, onChange }: { value: T; options: { value: T; label: string }[]; onChange: (value: T) => void }) {
   return <View style={styles.segmented} accessibilityRole="radiogroup">
-    {options.map((option) => {
+    {options.map((option, index) => {
       const active = option.value === value;
-      return <Pressable key={option.value} onPress={() => onChange(option.value)} style={[styles.segment, active && styles.segmentActive]} accessibilityRole="radio" accessibilityState={{ selected: active }}>
+      return <Pressable key={option.value} onPress={() => onChange(option.value)} style={[styles.segment, index > 0 && styles.segmentDivider, active && styles.segmentActive]} accessibilityRole="radio" accessibilityState={{ selected: active }}>
+        {active && <Icon name="check" size={16} color={colors.text} />}
         <Text style={[styles.segmentText, active && styles.segmentTextActive]}>{option.label}</Text>
       </Pressable>;
     })}
@@ -139,15 +142,18 @@ function Segmented<T extends string>({ value, options, onChange }: { value: T; o
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  spaced: { marginTop: 6 },
+  spaced: { marginTop: 16 },
   switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  segmented: { flexDirection: 'row', backgroundColor: colors.surfaceMuted, borderRadius: radius.pill, padding: 4 },
-  segment: { flex: 1, minHeight: 40, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
-  segmentActive: { backgroundColor: colors.surface, shadowColor: '#2A1E2E', shadowOpacity: 0.08, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 1 },
-  segmentText: { color: colors.muted, fontWeight: '600', fontSize: 15 },
-  segmentTextActive: { color: colors.text },
+  // Material 3 segmented buttons: outlined pill, selected segment tinted with a check.
+  segmented: { flexDirection: 'row', borderWidth: 1, borderColor: colors.outline, borderRadius: radius.pill, overflow: 'hidden' },
+  segment: { flex: 1, minHeight: 48, flexDirection: 'row', gap: space.sm, alignItems: 'center', justifyContent: 'center' },
+  segmentDivider: { borderLeftWidth: 1, borderLeftColor: colors.outline },
+  segmentActive: { backgroundColor: colors.primarySoft },
+  segmentText: { color: colors.text, fontWeight: '500', fontSize: 15 },
+  segmentTextActive: { fontWeight: '700' },
   accountRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  danger: { borderWidth: 1, borderColor: colors.dangerSoft, borderRadius: radius.lg, padding: 20, gap: 10 },
+  danger: { borderWidth: 1, borderColor: colors.dangerSoft, borderRadius: radius.lg, padding: space.lg, gap: space.md },
+  disclaimer: { ...typography.caption, fontSize: 13, textAlign: 'center', paddingHorizontal: space.md },
   dangerTitle: { color: colors.danger },
 });

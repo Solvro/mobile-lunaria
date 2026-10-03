@@ -13,7 +13,9 @@ import { Screen } from '@/components/Screen';
 import { addDays, currentPeriod, dayClassifier, daysBetween, isoDate, parseDate, recentRange, startOfMonth, todayIso } from '@/cycle';
 import { useI18n } from '@/i18n';
 import { usePreferences } from '@/preferences';
-import { colors, typography } from '@/theme';
+import { colors, space, typography } from '@/theme';
+
+const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 function toDraft(record: DailyRecord | undefined, date: string, startPeriod = false): Draft {
   if (record) return { date, is_period: record.is_period, flow: record.flow, intimacy: record.intimacy, note: record.note };
@@ -23,7 +25,7 @@ function toDraft(record: DailyRecord | undefined, date: string, startPeriod = fa
 export default function Calendar() {
   const { session } = useAuth();
   const { weekStart } = usePreferences();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [month, setMonth] = useState(startOfMonth(new Date()));
   const [selected, setSelected] = useState(todayIso());
   const [records, setRecords] = useState<DailyRecord[]>([]);
@@ -60,6 +62,7 @@ export default function Calendar() {
   const classify = dayClassifier(records, prediction);
   const today = todayIso();
   const todayRecord = recent.find((record) => record.date === today);
+  const todayLabel = capitalize(new Date().toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' }));
   const period = currentPeriod(recent, { usualLength: prediction?.average_period_duration });
   const hasPeriodData = !!prediction || recent.some((record) => record.is_period);
   const periodSoon = !prediction || daysBetween(today, prediction.next_period_start) <= 7;
@@ -124,7 +127,7 @@ export default function Calendar() {
   }
 
   return <>
-    <Screen title={t('cycle.greeting', { name: session?.account.display_name ?? '' })} refreshing={loading} onRefresh={refresh}>
+    <Screen subtitle={todayLabel} title={t('cycle.greeting', { name: session?.account.display_name ?? '' })} refreshing={loading} onRefresh={refresh}>
       <CycleHero prediction={prediction} records={recent}>
         <View style={styles.heroAction}>
           {todayRecord?.is_period
@@ -154,14 +157,12 @@ export default function Calendar() {
           ? <Button label={byDate.has(selected) ? t('day.edit') : t('day.add')} icon={byDate.has(selected) ? 'edit' : 'plus'} variant="secondary" onPress={() => setDraft(toDraft(byDate.get(selected), selected, likelyPeriod(selected)))} />
           : <Text style={typography.caption}>{t('day.future')}</Text>}
       />
-      <Text style={styles.disclaimer}>{t('cycle.disclaimer')}</Text>
     </Screen>
     <DaySheet draft={draft} onChange={setDraft} onClose={() => !saving && setDraft(null)} onSave={save} onClear={clear} saving={saving} canClear={!!draft && byDate.has(draft.date)} />
   </>;
 }
 
 const styles = StyleSheet.create({
-  heroAction: { marginTop: 8, gap: 8 },
-  heroHint: { color: colors.muted, fontSize: 13, lineHeight: 18, textAlign: 'center' },
-  disclaimer: { ...typography.caption, fontSize: 12, lineHeight: 17, textAlign: 'center', paddingHorizontal: 12 },
+  heroAction: { marginTop: space.md, gap: space.md },
+  heroHint: { color: colors.muted, fontSize: 14, lineHeight: 20, textAlign: 'center' },
 });
