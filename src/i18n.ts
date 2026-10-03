@@ -14,6 +14,8 @@ const strings = {
   estimatesNotInstructions: ['Estimates, not instructions', 'Prognozy, nie zalecenia'],
   estimateDisclaimer: ['Lunaria uses your recorded history to offer informational estimates. It is not medical advice, contraception, or pregnancy planning guidance.', 'Lunaria wykorzystuje zapisaną historię do tworzenia prognoz informacyjnych. Nie jest to porada medyczna, antykoncepcyjna ani dotycząca planowania ciąży.'],
   settings: ['Settings', 'Ustawienia'],
+  sharing: ['Sharing', 'Udostępnianie'],
+  calendarTab: ['Calendar', 'Kalendarz'],
   yourSettings: ['Your settings', 'Twoje ustawienia'],
   language: ['Language', 'Język'],
   english: ['English', 'Angielski'],
