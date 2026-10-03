@@ -12,7 +12,7 @@ export function CycleHero({ prediction, records, partnerName, children }: { pred
   const period = currentPeriod(records, { usualLength: prediction?.average_period_duration, confirmedOnly: !!partnerName });
   const untilPeriod = prediction ? daysBetween(today, prediction.next_period_start) : null;
   const fertileToday = !!prediction && today >= prediction.fertile_window_start && today <= prediction.fertile_window_end;
-  const ovulationToday = prediction?.ovulation_date === today;
+  const predictedOvulationToday = prediction?.predicted_ovulation_date === today;
 
   // Short eyebrow + a big headline that stays one line on small phones.
   let eyebrow: string | null = null;
@@ -52,8 +52,8 @@ export function CycleHero({ prediction, records, partnerName, children }: { pred
     {eyebrow && <Text style={styles.eyebrow}>{eyebrow}</Text>}
     <Text style={big ? styles.headline : styles.headlineText} accessibilityRole="header" numberOfLines={big ? 1 : undefined} adjustsFontSizeToFit={big}>{headline}</Text>
     {details.length > 0 && <Text style={typeScale.bodyMedium}>{details.join(' · ')}</Text>}
-    {(fertileToday || ovulationToday) && <View style={styles.chips}>
-      <View style={styles.chip}><View style={styles.chipDot} /><Text style={styles.chipText}>{ovulationToday ? t('cycle.ovulationToday') : t('cycle.fertileToday')}</Text></View>
+    {(fertileToday || predictedOvulationToday) && <View style={styles.chips}>
+      <View style={styles.chip}><View style={styles.chipDot} /><Text style={styles.chipText}>{t('cycle.predictedOvulation')}</Text></View>
     </View>}
     {prediction && !hideLate && <CycleBar prediction={prediction} />}
     {children}

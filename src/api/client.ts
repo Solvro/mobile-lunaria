@@ -80,6 +80,9 @@ export const api = {
   updateSharingScope(token: string, scope: SharingScope) {
     return request<Account>('/v1/partner/sharing-scope', { method: 'PUT', body: JSON.stringify(scope) }, token);
   },
+  updateUsageMode(token: string, tracks_cycle: boolean) {
+    return request<Account>('/v1/account/usage-mode', { method: 'PUT', body: JSON.stringify({ tracks_cycle }) }, token);
+  },
   deleteCycleData(token: string) {
     return request<void>('/v1/account/cycle-data', { method: 'DELETE' }, token);
   },

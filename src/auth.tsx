@@ -1,9 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { api } from './api/client';
 import type { Account, Session } from './api/types';
-
-const tracksCycleKey = (accountId: string) => `lunaria.tracks-cycle.${accountId}`;
 
 type AuthState = {
   session: Session | null;
@@ -18,12 +15,9 @@ type AuthState = {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-// Prefer the server's value; fall back to the choice remembered on this device.
+// Migrate sessions created before usage mode was stored by the API.
 async function withTracksCycle(session: Session, chosen?: boolean): Promise<Session> {
-  const key = tracksCycleKey(session.account.id);
-  if (chosen !== undefined) await AsyncStorage.setItem(key, String(chosen));
-  const stored = await AsyncStorage.getItem(key);
-  const tracks_cycle = session.account.tracks_cycle ?? chosen ?? (stored === null ? true : stored === 'true');
+  const tracks_cycle = session.account.tracks_cycle ?? chosen ?? true;
   return { ...session, account: { ...session.account, tracks_cycle } };
 }
 
@@ -50,12 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     tracksCycle: session?.account.tracks_cycle ?? true,
     signIn: async (email, password) => {
       const signedIn = await api.signIn(email, password);
-      // New device and the API doesn't know the mode: someone linked to a partner with no
-      // period data of their own is almost certainly only following.
-      const known = signedIn.account.tracks_cycle !== undefined || (await AsyncStorage.getItem(tracksCycleKey(signedIn.account.id))) !== null;
-      const prediction = !known && signedIn.account.linked_partner_id ? await api.predictions(signedIn.token).catch(() => undefined) : undefined;
-      const guess = prediction === undefined ? undefined : prediction !== null;
-      await store(await withTracksCycle(signedIn, guess));
+      await store(await withTracksCycle(signedIn));
     },
     register: async (name, email, password, tracksCycle) => store(await withTracksCycle(await api.register(name, email, password, tracksCycle), tracksCycle)),
     updateAccount: async (account) => {
@@ -64,7 +53,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     },
     setTracksCycle: async (value) => {
       if (!session) return;
-      await store(await withTracksCycle(session, value).then((next) => ({ ...next, account: { ...next.account, tracks_cycle: value } })));
+      const account = await api.updateUsageMode(session.token, value);
+      await store({ ...session, account });
     },
     signOut: async () => { await api.clearSession(); setSession(null); },
   }}>{children}</AuthContext>;

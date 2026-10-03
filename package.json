@@ -26,7 +26,8 @@
     "start:production": "EXPO_PUBLIC_API_URL=https://lunaria-api.b.solvro.pl expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "expo lint"
   },
   "private": true
 }

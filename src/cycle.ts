@@ -1,10 +1,9 @@
 import type { Prediction } from '@/api/types';
 
-export type DayKind = 'period' | 'predicted' | 'fertile' | null;
+export type DayKind = 'period' | 'predicted' | 'predicted_ovulation' | null;
 
 export type DayInfo = {
   kind: DayKind;
-  ovulation: boolean;
   intimacy: boolean;
   logged: boolean;
 };
@@ -48,13 +47,11 @@ function projectedRanges(prediction: Prediction, cycles = 4) {
   const shift = (iso: string, cycle: number) => isoDate(addDays(parseDate(iso), cycle * prediction.average_cycle_length));
   const periods: Range[] = [];
   const fertile: Range[] = [];
-  const ovulations = new Set<string>();
   for (let cycle = 0; cycle < cycles; cycle += 1) {
     periods.push({ start: shift(prediction.next_period_start, cycle), end: shift(prediction.next_period_end, cycle) });
     fertile.push({ start: shift(prediction.fertile_window_start, cycle), end: shift(prediction.fertile_window_end, cycle) });
-    ovulations.add(shift(prediction.ovulation_date, cycle));
   }
-  return { periods, fertile, ovulations };
+  return { periods, fertile };
 }
 
 const within = (iso: string, ranges: Range[]) => ranges.some((range) => iso >= range.start && iso <= range.end);
@@ -65,12 +62,11 @@ export function dayClassifier(records: DayRecordLike[], prediction: Prediction |
   const today = todayIso();
   return (iso: string): DayInfo => {
     const record = byDate.get(iso);
-    const ovulation = !!projection?.ovulations.has(iso) && iso >= today;
     let kind: DayKind = null;
     if (record?.is_period) kind = 'period';
     else if (projection && iso >= today && within(iso, projection.periods)) kind = 'predicted';
-    else if (projection && iso >= today && within(iso, projection.fertile)) kind = 'fertile';
-    return { kind, ovulation, intimacy: !!record?.intimacy, logged: !!record };
+    else if (projection && iso >= today && within(iso, projection.fertile)) kind = 'predicted_ovulation';
+    return { kind, intimacy: !!record?.intimacy, logged: !!record };
   };
 }
 

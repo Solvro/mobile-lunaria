@@ -51,12 +51,16 @@ export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
   const sharesAnything = sharesPeriods || sharesIntimacy || !!view.prediction;
   const legend: LegendKey[] = [
     ...(sharesPeriods ? ['period' as const] : []),
-    ...(view.prediction ? ['predicted' as const, 'fertile' as const, 'ovulation' as const] : []),
+    ...(view.prediction ? ['predicted' as const, 'predicted_ovulation' as const] : []),
     ...(sharesIntimacy ? ['intimacy' as const] : []),
     'today',
   ];
 
   return <View style={styles.wrapper}>
+    <View style={styles.viewerLabel}>
+      <Icon name="eye" size={16} color={colors.primary} />
+      <Text style={styles.viewerText}>{t('partner.viewingCalendar', { name })}</Text>
+    </View>
     <CycleHero prediction={view.prediction} records={recent} partnerName={name} />
     <Card>
       <MonthCalendar month={month} onMonthChange={setMonth} weekStart={weekStart} classify={classify} selected={selected} onSelect={setSelected} legend={legend} />
@@ -74,4 +78,6 @@ const styles = StyleSheet.create({
   loading: { marginVertical: 32 },
   notice: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', padding: 14, borderRadius: shape.lg, backgroundColor: colors.surfaceContainer },
   noticeText: { flex: 1, color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20 },
+  viewerLabel: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 8, borderRadius: shape.full, backgroundColor: colors.primaryContainer },
+  viewerText: { color: colors.onPrimaryContainer, fontSize: 14, fontWeight: '700' },
 });

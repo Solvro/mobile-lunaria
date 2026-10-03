@@ -13,8 +13,7 @@ export function DayDetails({ iso, info, record, action }: { iso: string; info: D
   const rows: { icon: IconName; color: string; text: string }[] = [];
   if (info.kind === 'period') rows.push({ icon: 'drop', color: colors.period, text: record?.flow ? t('day.periodFlow', { flow: t(`flow.${record.flow}`).toLowerCase() }) : t('calendar.period') });
   if (info.kind === 'predicted') rows.push({ icon: 'drop', color: colors.onPeriodContainer, text: t('calendar.predicted') });
-  if (info.kind === 'fertile') rows.push({ icon: 'info', color: colors.fertile, text: t('calendar.fertile') });
-  if (info.ovulation) rows.push({ icon: 'info', color: colors.fertile, text: t('calendar.ovulation') });
+  if (info.kind === 'predicted_ovulation') rows.push({ icon: 'info', color: colors.fertile, text: t('calendar.predictedOvulation') });
   if (info.intimacy) rows.push({ icon: 'heart', color: colors.intimacy, text: t('calendar.intimacy') });
   if (record?.note) rows.push({ icon: 'lock', color: colors.onSurfaceVariant, text: record.note });
 
