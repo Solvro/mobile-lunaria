@@ -54,7 +54,7 @@ export const api = {
     return request<void>(`/v1/records/${id}`, { method: 'DELETE' }, token);
   },
   predictions(token: string) {
-    return request<Prediction>('/v1/predictions', {}, token);
+    return request<Prediction | null>('/v1/predictions', {}, token);
   },
   partner(token: string) {
     return request<Partner | null>('/v1/partner', {}, token);
