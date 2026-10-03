@@ -146,7 +146,7 @@ export default function Calendar() {
           classify={classify}
           selected={selected}
           onSelect={setSelected}
-          legend={['period', 'predicted', 'fertile', 'ovulation', 'intimacy']}
+          legend={['period', 'predicted', 'fertile', 'ovulation', 'intimacy', 'today']}
         />
       </Card>
       <DayDetails

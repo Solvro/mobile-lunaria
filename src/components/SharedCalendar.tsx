@@ -53,6 +53,7 @@ export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
     ...(sharesPeriods ? ['period' as const] : []),
     ...(view.prediction ? ['predicted' as const, 'fertile' as const, 'ovulation' as const] : []),
     ...(sharesIntimacy ? ['intimacy' as const] : []),
+    'today',
   ];
 
   return <View style={styles.wrapper}>

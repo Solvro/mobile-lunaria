@@ -6,7 +6,7 @@ import { useI18n } from '@/i18n';
 import type { WeekStart } from '@/preferences';
 import { colors, shape, space } from '@/theme';
 
-export type LegendKey = 'period' | 'predicted' | 'fertile' | 'ovulation' | 'intimacy';
+export type LegendKey = 'period' | 'predicted' | 'fertile' | 'ovulation' | 'intimacy' | 'today';
 
 // Every day is a circle; its fill says what kind of day it is.
 const fills: Record<NonNullable<DayKind>, { background: string; text: string; border?: string }> = {
@@ -73,7 +73,7 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
           fill && { backgroundColor: fill.background },
           fill?.border && { borderWidth: 1.5, borderColor: fill.border, borderStyle: 'dashed' },
           info.ovulation && styles.ovulation,
-          isSelected && (fill ? styles.selectedOnFill : styles.selected),
+          isSelected && (fill ? (isToday ? styles.todaySelectedOnFill : styles.selectedOnFill) : isToday ? styles.todaySelected : styles.selected),
           circleSize,
         ]}>
           <Text style={[styles.dayText, fill && { color: fill.text }, isToday && styles.todayText, isSelected && !fill && styles.selectedText]}>{day.getDate()}</Text>
@@ -82,16 +82,18 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
         {info.intimacy && <View style={[styles.heart, { top: (CELL_HEIGHT + size) / 2 + space.xs }]}><Icon name="heart" size={10} color={colors.error} /></View>}
       </Pressable>;
     })}</View>)}
-    {legend.length > 0 && <View style={styles.legend}>{legend.map((key) => <LegendItem key={key} kind={key} label={t(`calendar.${key}`)} />)}</View>}
+    {legend.length > 0 && <View style={styles.legend}>{legend.map((key) => <LegendItem key={key} kind={key} label={key === 'today' ? t('common.today') : t(`calendar.${key}`)} />)}</View>}
   </View>;
 }
 
 function LegendItem({ kind, label }: { kind: LegendKey; label: string }) {
   const swatch = kind === 'ovulation' || kind === 'intimacy'
     ? styles.swatchOvulation
-    : [{ backgroundColor: fills[kind].background }, kind === 'predicted' && styles.swatchPredicted];
+    : kind === 'today'
+      ? styles.swatchToday
+      : [{ backgroundColor: fills[kind].background }, kind === 'predicted' && styles.swatchPredicted];
   return <View style={styles.legendItem}>
-    {kind === 'intimacy' ? <Icon name="heart" size={12} color={colors.intimacy} /> : <View style={[styles.swatch, swatch]} />}
+    {kind === 'intimacy' ? <Icon name="heart" size={12} color={colors.error} /> : <View style={[styles.swatch, swatch]} />}
     <Text style={styles.legendText}>{label}</Text>
   </View>;
 }
@@ -111,6 +113,8 @@ const styles = StyleSheet.create({
   ovulation: { borderWidth: 2, borderColor: colors.fertile, borderStyle: 'solid' },
   selected: { backgroundColor: colors.onSurface },
   selectedOnFill: { borderWidth: 3, borderColor: colors.onSurface, borderStyle: 'solid' },
+  todaySelected: { backgroundColor: colors.primary },
+  todaySelectedOnFill: { borderWidth: 3, borderColor: colors.surfaceContainerLowest, borderStyle: 'solid' },
   todayDot: { position: 'absolute', bottom: 5, width: 4, height: 4, borderRadius: 2 },
   dayText: { color: colors.onSurface, fontSize: 15, fontWeight: '500' },
   todayText: { fontWeight: '800' },
@@ -121,5 +125,6 @@ const styles = StyleSheet.create({
   swatch: { width: 14, height: 14, borderRadius: 7 },
   swatchPredicted: { borderWidth: 1.5, borderColor: colors.period, borderStyle: 'dashed' },
   swatchOvulation: { borderWidth: 2, borderColor: colors.fertile, backgroundColor: colors.surfaceContainerLowest },
+  swatchToday: { width: 8, height: 8, borderRadius: 4, marginHorizontal: 3, backgroundColor: colors.primary },
   legendText: { color: colors.onSurfaceVariant, fontSize: 13 },
 });
