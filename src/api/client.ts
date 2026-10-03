@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import type { DailyRecord, Partner, PartnerView, Prediction, Session } from './types';
+import type { Account, DailyRecord, Partner, PartnerRequest, PartnerView, Prediction, Session, SharingScope } from './types';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000';
 const SESSION_KEY = 'lunaria.session';
@@ -27,6 +27,9 @@ export const api = {
   },
   async clearSession() {
     await SecureStore.deleteItemAsync(SESSION_KEY);
+  },
+  async saveSession(session: Session) {
+    await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(session));
   },
   async signIn(email: string, password: string) {
     const session = await request<Session>('/v1/auth/sign-in', { method: 'POST', body: JSON.stringify({ email, password }) });
@@ -56,14 +59,26 @@ export const api = {
   partner(token: string) {
     return request<Partner | null>('/v1/partner', {}, token);
   },
-  linkPartner(token: string, code: string) {
-    return request<Partner>('/v1/partner/link', { method: 'POST', body: JSON.stringify({ code }) }, token);
+  partnerRequests(token: string) {
+    return request<PartnerRequest[]>('/v1/partner/requests', {}, token);
+  },
+  createPartnerRequest(token: string, code: string) {
+    return request<PartnerRequest>('/v1/partner/requests', { method: 'POST', body: JSON.stringify({ code }) }, token);
+  },
+  acceptPartnerRequest(token: string, requestId: string) {
+    return request<Partner>(`/v1/partner/requests/${requestId}/accept`, { method: 'POST' }, token);
+  },
+  rejectPartnerRequest(token: string, requestId: string) {
+    return request<void>(`/v1/partner/requests/${requestId}/reject`, { method: 'POST' }, token);
   },
   unlinkPartner(token: string) {
     return request<void>('/v1/partner/link', { method: 'DELETE' }, token);
   },
   partnerView(token: string, start: string, end: string) {
     return request<PartnerView>(`/v1/partner/records?start=${start}&end=${end}`, {}, token);
+  },
+  updateSharingScope(token: string, scope: SharingScope) {
+    return request<Account>('/v1/partner/sharing-scope', { method: 'PUT', body: JSON.stringify(scope) }, token);
   },
   deleteCycleData(token: string) {
     return request<void>('/v1/account/cycle-data', { method: 'DELETE' }, token);

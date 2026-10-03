@@ -3,7 +3,7 @@ import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { api } from '@/api/client';
-import type { DailyRecord, PartnerView } from '@/api/types';
+import type { PartnerView, SharedDailyRecord } from '@/api/types';
 import { useAuth } from '@/auth';
 import { colors, shadow } from '@/theme';
 
@@ -33,7 +33,7 @@ export default function Partner() {
   </ScrollView></SafeAreaView>;
 }
 
-function Day({ date, inMonth, record }: { date: Date; inMonth: boolean; record?: DailyRecord }) {
+function Day({ date, inMonth, record }: { date: Date; inMonth: boolean; record?: SharedDailyRecord }) {
   return <View style={[styles.day, !inMonth && styles.outside, record?.is_period && styles.periodDay]}><Text style={[styles.dayText, record?.is_period && styles.periodText]}>{date.getDate()}</Text></View>;
 }
 function friendlyDate(date: string) { return new Date(`${date}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }

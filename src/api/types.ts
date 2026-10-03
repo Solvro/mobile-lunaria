@@ -5,6 +5,7 @@ export type Account = {
   partner_link_code: string;
   linked_partner_id: string | null;
   agreements_accepted: boolean;
+  sharing_scope?: SharingScope;
 };
 
 export type Session = { token: string; account: Account };
@@ -35,8 +36,22 @@ export type Partner = {
   display_name: string;
 };
 
+export type SharingScope = {
+  calendar: boolean;
+  predictions: boolean;
+};
+
+export type PartnerRequest = {
+  id: string;
+  partner: Partner;
+  direction: 'incoming' | 'outgoing';
+  created_at: string;
+};
+
+export type SharedDailyRecord = Pick<DailyRecord, 'date' | 'is_period' | 'flow'>;
+
 export type PartnerView = {
   partner: Partner;
-  records: DailyRecord[];
+  records: SharedDailyRecord[];
   prediction: Prediction | null;
 };
