@@ -4,7 +4,7 @@ import { Icon } from '@/components/Icon';
 import { addDays, isoDate, startOfMonth, todayIso, type DayInfo, type DayKind } from '@/cycle';
 import { useI18n } from '@/i18n';
 import type { WeekStart } from '@/preferences';
-import { colors, shape, space } from '@/theme';
+import { colors, space } from '@/theme';
 
 export type LegendKey = 'period' | 'predicted' | 'fertile' | 'ovulation' | 'intimacy' | 'today';
 
