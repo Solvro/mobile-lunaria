@@ -9,6 +9,7 @@ import { PrimaryButton } from '@/components/PrimaryButton';
 import { PodMark } from '@/components/PodMark';
 import { colors, shadow } from '@/theme';
 import { usePreferences } from '@/preferences';
+import { translate } from '@/i18n';
 
 type Draft = Pick<DailyRecord, 'date' | 'is_period' | 'flow' | 'intimacy' | 'note'>;
 const flowLevels: NonNullable<DailyRecord['flow']>[] = ['spotting', 'light', 'medium', 'heavy'];
@@ -46,20 +47,21 @@ export default function Calendar() {
   }
   const byDate = new Map(records.map((record) => [record.date, record]));
   const locale = language === 'pl' ? 'pl-PL' : 'en-US';
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
   const weekdays = weekdayNames(locale, weekStart);
   const firstDayOffset = weekStart === 'monday' ? (month.getDay() + 6) % 7 : month.getDay();
   const days = Array.from({ length: 42 }, (_, index) => addDays(month, index - firstDayOffset));
   const isTodayVisible = month.getFullYear() === new Date().getFullYear() && month.getMonth() === new Date().getMonth();
 
   return <SafeAreaView style={styles.page} edges={['top']}><ScrollView contentContainerStyle={styles.content}>
-    <View style={styles.header}><View><Text style={styles.eyebrow}>YOUR CYCLE</Text><Text style={styles.title}>Cycle calendar</Text></View><Pressable onPress={() => router.push('/sharing')} accessibilityLabel="Open sharing"><PodMark size={35} /></Pressable></View>
-    <View style={[styles.insight, shadow]}><View><Text style={styles.insightLabel}>NEXT EXPECTED PERIOD</Text><Text style={styles.insightValue}>{prediction ? friendlyDate(prediction.next_period_start, locale) : 'No forecast yet'}</Text><Text style={styles.insightNote}>{prediction ? `${confidenceLabel(prediction.confidence)} confidence` : 'Log your first period day to start building a forecast.'}</Text></View><View style={styles.crescent}><PodMark size={45} /></View></View>
+    <View style={styles.header}><View><Text style={styles.eyebrow}>{t('yourCycle')}</Text><Text style={styles.title}>{t('calendar')}</Text></View><Pressable onPress={() => router.push('/sharing')} accessibilityLabel="Open sharing"><PodMark size={35} /></Pressable></View>
+    <View style={[styles.insight, shadow]}><View><Text style={styles.insightLabel}>{t('nextExpectedPeriod')}</Text><Text style={styles.insightValue}>{prediction ? friendlyDate(prediction.next_period_start, locale) : t('noForecastYet')}</Text><Text style={styles.insightNote}>{prediction ? `${confidenceLabel(prediction.confidence)} ${t('confidence')}` : t('forecastZeroState')}</Text></View><View style={styles.crescent}><PodMark size={45} /></View></View>
     <View style={styles.calendarCard}><View style={styles.monthHeader}><Pressable hitSlop={12} onPress={() => setMonth(new Date(month.getFullYear(), month.getMonth() - 1, 1))}><Text style={styles.arrow}>‹</Text></Pressable><Text style={styles.month}>{formatMonth(month, locale)}</Text><Pressable hitSlop={12} onPress={() => setMonth(new Date(month.getFullYear(), month.getMonth() + 1, 1))}><Text style={styles.arrow}>›</Text></Pressable></View>
       <View style={styles.grid}>{weekdays.map((day, index) => <Text key={`${day}${index}`} style={styles.weekday}>{day}</Text>)}{days.map((day) => <Day key={isoDate(day)} date={day} inMonth={day.getMonth() === month.getMonth()} record={byDate.get(isoDate(day))} prediction={prediction} onPress={() => setDraft(toDraft(byDate.get(isoDate(day)), isoDate(day)))} />)}</View>
-      <View style={styles.legend}><Legend color={colors.rose} label="Logged period" /><Legend color={colors.lavender} label="Estimated" /><Legend color={colors.green} label="Intimacy" /></View>
+      <View style={styles.legend}><Legend color={colors.rose} label={t('loggedPeriod')} /><Legend color={colors.lavender} label={t('estimated')} /><Legend color={colors.green} label={t('intimacy')} /></View>
     </View>
-     <Pressable accessibilityRole="button" accessibilityState={{ disabled: isTodayVisible }} disabled={isTodayVisible} onPress={() => setMonth(startOfMonth(new Date()))} style={[styles.today, isTodayVisible && styles.todayDisabled]}><Text style={[styles.todayText, isTodayVisible && styles.todayTextDisabled]}>Return to today</Text></Pressable>
-    <View style={styles.disclaimer}><Text style={styles.disclaimerTitle}>Estimates, not instructions</Text><Text style={styles.disclaimerText}>Lunaria uses your recorded history to offer informational estimates. It is not medical advice, contraception, or pregnancy planning guidance.</Text></View>
+     <Pressable accessibilityRole="button" accessibilityState={{ disabled: isTodayVisible }} disabled={isTodayVisible} onPress={() => setMonth(startOfMonth(new Date()))} style={[styles.today, isTodayVisible && styles.todayDisabled]}><Text style={[styles.todayText, isTodayVisible && styles.todayTextDisabled]}>{t('returnToToday')}</Text></Pressable>
+     <View style={styles.disclaimer}><Text style={styles.disclaimerTitle}>{t('estimatesNotInstructions')}</Text><Text style={styles.disclaimerText}>{t('estimateDisclaimer')}</Text></View>
     {loading && <ActivityIndicator color={colors.plum} style={styles.loading} />}
   </ScrollView><RecordEditor locale={locale} draft={draft} setDraft={setDraft} onSave={saveDraft} onDelete={async () => { const record = draft && byDate.get(draft.date); if (record && token) { await api.deleteRecord(token, record.id); } setDraft(null); refresh(); }} /></SafeAreaView>;
 }

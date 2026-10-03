@@ -8,6 +8,7 @@ import { ConfirmationSheet } from '@/components/ConfirmationSheet';
 import type { Language, WeekStart } from '@/preferences';
 import { usePreferences } from '@/preferences';
 import { colors, shadow } from '@/theme';
+import { translate } from '@/i18n';
 
 type DestructiveAction = 'cycle-data' | 'account' | null;
 
@@ -16,6 +17,7 @@ export default function Settings() {
   const { language, weekStart, setLanguage, setWeekStart } = usePreferences();
   const [destructiveAction, setDestructiveAction] = useState<DestructiveAction>(null);
   const [working, setWorking] = useState(false);
+  const t = (key: Parameters<typeof translate>[1]) => translate(language, key);
 
   async function changeLanguage(value: Language) {
     try { await setLanguage(value); }
@@ -51,11 +53,11 @@ export default function Settings() {
   }
 
   const isAccount = destructiveAction === 'account';
-  return <SafeAreaView style={styles.page} edges={['top']}><ScrollView contentContainerStyle={styles.content}><View style={styles.top}><Pressable onPress={() => router.back()} hitSlop={12}><Text style={styles.back}>‹</Text></Pressable></View><Text style={styles.eyebrow}>SETTINGS</Text><Text style={styles.title}>Your space, your choices.</Text>
-    <Section title="Language"><ChoiceRow label="English" selected={language === 'en'} onPress={() => changeLanguage('en')} /><ChoiceRow label="Polski" selected={language === 'pl'} onPress={() => changeLanguage('pl')} /></Section>
-    <Section title="Calendar"><Text style={styles.description}>Choose the first day of your calendar week.</Text><ChoiceRow label="Monday" selected={weekStart === 'monday'} onPress={() => changeWeekStart('monday')} /><ChoiceRow label="Sunday" selected={weekStart === 'sunday'} onPress={() => changeWeekStart('sunday')} /></Section>
-    <Section title="Account"><Pressable style={styles.row} onPress={leave}><Text style={styles.rowLabel}>Sign out</Text><Text style={styles.chevron}>›</Text></Pressable></Section>
-    <View style={styles.danger}><Text style={styles.dangerTitle}>Delete data</Text><Text style={styles.description}>These actions cannot be undone.</Text><Pressable onPress={() => setDestructiveAction('cycle-data')}><Text style={styles.dangerAction}>Delete cycle data</Text></Pressable><Pressable onPress={() => setDestructiveAction('account')}><Text style={styles.dangerAction}>Delete account</Text></Pressable></View>
+  return <SafeAreaView style={styles.page} edges={['top']}><ScrollView contentContainerStyle={styles.content}><View style={styles.top}><Pressable onPress={() => router.back()} hitSlop={12}><Text style={styles.back}>‹</Text></Pressable></View><Text style={styles.eyebrow}>{t('settings').toUpperCase()}</Text><Text style={styles.title}>{t('yourSettings')}</Text>
+    <Section title={t('language')}><ChoiceRow label={t('english')} selected={language === 'en'} onPress={() => changeLanguage('en')} /><ChoiceRow label={t('polish')} selected={language === 'pl'} onPress={() => changeLanguage('pl')} /></Section>
+    <Section title={t('calendarSettings')}><Text style={styles.description}>{t('weekStartDescription')}</Text><ChoiceRow label={t('monday')} selected={weekStart === 'monday'} onPress={() => changeWeekStart('monday')} /><ChoiceRow label={t('sunday')} selected={weekStart === 'sunday'} onPress={() => changeWeekStart('sunday')} /></Section>
+    <Section title={t('account')}><Pressable style={styles.row} onPress={leave}><Text style={styles.rowLabel}>{t('signOut')}</Text><Text style={styles.chevron}>›</Text></Pressable></Section>
+    <View style={styles.danger}><Text style={styles.dangerTitle}>{t('deleteData')}</Text><Text style={styles.description}>{t('deleteDataDescription')}</Text><Pressable onPress={() => setDestructiveAction('cycle-data')}><Text style={styles.dangerAction}>{t('deleteCycleData')}</Text></Pressable><Pressable onPress={() => setDestructiveAction('account')}><Text style={styles.dangerAction}>{t('deleteAccount')}</Text></Pressable></View>
   </ScrollView><ConfirmationSheet visible={destructiveAction !== null} title={isAccount ? 'Delete account?' : 'Delete cycle data?'} message={isAccount ? 'This permanently deletes your account, linked sharing, and all cycle data. You will be signed out.' : 'This permanently deletes all logged cycle data. Your account will remain available.'} confirmation={isAccount ? 'DELETE' : 'CLEAR'} confirmLabel={isAccount ? 'Delete account' : 'Delete cycle data'} working={working} onCancel={() => !working && setDestructiveAction(null)} onConfirm={confirmDestructiveAction} /></SafeAreaView>;
 }
 
