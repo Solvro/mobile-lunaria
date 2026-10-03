@@ -79,7 +79,7 @@ export function MonthCalendar({ month, onMonthChange, weekStart, classify, selec
           <Text style={[styles.dayText, fill && { color: fill.text }, isToday && styles.todayText, isSelected && !fill && styles.selectedText]}>{day.getDate()}</Text>
           {isToday && <View style={[styles.todayDot, { backgroundColor: isSelected && !fill ? colors.surfaceContainerLowest : fill ? fill.text : colors.primary }]} />}
         </View>
-        {info.intimacy && <View style={styles.heart}><Icon name="heart" size={10} color={colors.intimacy} /></View>}
+        {info.intimacy && <View style={[styles.heart, { top: (CELL_HEIGHT + size) / 2 + space.xs }]}><Icon name="heart" size={10} color={colors.error} /></View>}
       </Pressable>;
     })}</View>)}
     {legend.length > 0 && <View style={styles.legend}>{legend.map((key) => <LegendItem key={key} kind={key} label={t(`calendar.${key}`)} />)}</View>}
@@ -97,6 +97,7 @@ function LegendItem({ kind, label }: { kind: LegendKey; label: string }) {
 }
 
 const CIRCLE = 40;
+const CELL_HEIGHT = CIRCLE + 18;
 
 const styles = StyleSheet.create({
   wrapper: { gap: space.xs },
@@ -105,8 +106,8 @@ const styles = StyleSheet.create({
   navButton: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceContainer },
   row: { flexDirection: 'row' },
   weekday: { flex: 1, textAlign: 'center', color: colors.onSurfaceVariant, fontSize: 12, fontWeight: '600', paddingBottom: space.sm, textTransform: 'capitalize' },
-  cell: { flex: 1, height: CIRCLE + 14, alignItems: 'center', justifyContent: 'center' },
-  circle: { alignItems: 'center', justifyContent: 'center' },
+  cell: { flex: 1, height: CELL_HEIGHT, alignItems: 'center', justifyContent: 'center' },
+  circle: { alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   ovulation: { borderWidth: 2, borderColor: colors.fertile, borderStyle: 'solid' },
   selected: { backgroundColor: colors.onSurface },
   selectedOnFill: { borderWidth: 3, borderColor: colors.onSurface, borderStyle: 'solid' },
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
   dayText: { color: colors.onSurface, fontSize: 15, fontWeight: '500' },
   todayText: { fontWeight: '800' },
   selectedText: { color: colors.surfaceContainerLowest },
-  heart: { position: 'absolute', bottom: 0 },
+  heart: { position: 'absolute' },
   legend: { flexDirection: 'row', flexWrap: 'wrap', columnGap: space.md, rowGap: space.sm, marginTop: space.md, paddingTop: space.md, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.outlineVariant },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: space.sm },
   swatch: { width: 14, height: 14, borderRadius: 7 },
