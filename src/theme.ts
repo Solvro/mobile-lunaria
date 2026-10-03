@@ -31,12 +31,16 @@ export const colors = {
   // Cycle
   period: '#CF3A55',
   onPeriod: '#FFFFFF',
-  periodContainer: '#FDE4E7',
-  onPeriodContainer: '#A8334F',
+  periodContainer: '#FFE5DC',
+  onPeriodContainer: '#87311E',
+  expectedPeriod: '#DB6B45',
   fertile: '#2E7F79',
   fertileContainer: '#BFE6E1',
   fertileSurface: '#DDF2EF',
   onFertileContainer: '#17605B',
+  expectedOvulation: '#087C83',
+  calendarToday: '#3567C8',
+  calendarSelected: '#64408F',
   intimacy: '#7B5EA7',
 
   // Feedback
