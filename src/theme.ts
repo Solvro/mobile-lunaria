@@ -1,23 +1,23 @@
 import { StyleSheet } from 'react-native';
 
 export const colors = {
-  plum: '#29152F',
-  plumSoft: '#3A2342',
-  lavender: '#D8C5E6',
-  silver: '#D9D6DD',
-  cream: '#FFF9F0',
-  creamMuted: '#EEE7DE',
-  green: '#7F9B73',
-  rose: '#C78B9D',
-  text: '#29152F',
-  muted: '#6F6573',
-  border: '#DDD4E1',
+  plum: '#172033',
+  plumSoft: '#24324A',
+  lavender: '#BFDBFE',
+  silver: '#CBD5E1',
+  cream: '#F8FAFC',
+  creamMuted: '#E8EEF6',
+  green: '#0F766E',
+  rose: '#F59E0B',
+  text: '#172033',
+  muted: '#64748B',
+  border: '#CBD5E1',
   white: '#FFFFFF',
 };
 
 export const shadow = StyleSheet.create({
   card: {
-    shadowColor: '#29152F',
+    shadowColor: '#172033',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.08,
     shadowRadius: 20,
