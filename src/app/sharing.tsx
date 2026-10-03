@@ -7,6 +7,7 @@ import type { Partner, PartnerRequest, SharingScope } from '@/api/types';
 import { useAuth } from '@/auth';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { colors, shadow } from '@/theme';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
 export default function Sharing() {
   const { session, updateAccount } = useAuth();
@@ -84,7 +85,7 @@ export default function Sharing() {
       {outgoing.map((request) => <View key={request.id} style={[styles.pendingCard, shadow]}><Text style={styles.cardLabel}>REQUEST SENT</Text><Text style={styles.partnerName}>{request.partner.display_name}</Text><Text style={styles.note}>Waiting for them to accept your request.</Text></View>)}
       <View style={[styles.card, shadow]}><Text style={styles.cardLabel}>WHAT YOU SHARE</Text><ScopeRow label="Period days" hint="Whether a day is logged as a period day" value={scope.period_days} saving={savingScope === 'period_days'} onChange={(value) => updateScope('period_days', value)} /><ScopeRow label="Intimacy" hint="Whether intimacy is logged for a day" value={scope.intimacy} saving={savingScope === 'intimacy'} onChange={(value) => updateScope('intimacy', value)} /><ScopeRow label="Predictions" hint="Cycle estimate dates" value={scope.predictions} saving={savingScope === 'predictions'} onChange={(value) => updateScope('predictions', value)} /><Text style={styles.note}>Private notes and flow level are never shared.</Text></View></>}
     <View style={styles.boundary}><Text style={styles.boundaryTitle}>Private by default</Text><Text style={styles.boundaryText}>Your notes and flow level stay private. Linked views are read-only.</Text></View>
-  </ScrollView></SafeAreaView>;
+   </ScrollView><BottomNavigation active="sharing" /></SafeAreaView>;
 }
 
 function ScopeRow({ label, hint, value, saving, onChange }: { label: string; hint: string; value: boolean; saving: boolean; onChange: (value: boolean) => void }) {

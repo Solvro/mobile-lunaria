@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import type { Account, DailyRecord, Partner, PartnerRequest, PartnerView, Prediction, Session, SharingScope } from './types';
+import type { Account, DailyRecord, DataExport, Partner, PartnerRequest, PartnerView, Prediction, Session, SharingScope } from './types';
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL ?? 'http://localhost:3000';
 const SESSION_KEY = 'lunaria.session';
@@ -85,5 +85,8 @@ export const api = {
   },
   deleteAccount(token: string) {
     return request<void>('/v1/account', { method: 'DELETE' }, token);
+  },
+  exportData(token: string) {
+    return request<DataExport>('/v1/account/export', {}, token);
   },
 };

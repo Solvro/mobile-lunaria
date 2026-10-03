@@ -10,6 +10,7 @@ import { PodMark } from '@/components/PodMark';
 import { colors, shadow } from '@/theme';
 import { usePreferences } from '@/preferences';
 import { translate } from '@/i18n';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
 type Draft = Pick<DailyRecord, 'date' | 'is_period' | 'flow' | 'intimacy' | 'note'>;
 const flowLevels: NonNullable<DailyRecord['flow']>[] = ['spotting', 'light', 'medium', 'heavy'];
@@ -63,7 +64,7 @@ export default function Calendar() {
      <Pressable accessibilityRole="button" accessibilityState={{ disabled: isTodayVisible }} disabled={isTodayVisible} onPress={() => setMonth(startOfMonth(new Date()))} style={[styles.today, isTodayVisible && styles.todayDisabled]}><Text style={[styles.todayText, isTodayVisible && styles.todayTextDisabled]}>{t('returnToToday')}</Text></Pressable>
      <View style={styles.disclaimer}><Text style={styles.disclaimerTitle}>{t('estimatesNotInstructions')}</Text><Text style={styles.disclaimerText}>{t('estimateDisclaimer')}</Text></View>
     {loading && <ActivityIndicator color={colors.plum} style={styles.loading} />}
-  </ScrollView><RecordEditor locale={locale} draft={draft} setDraft={setDraft} onSave={saveDraft} onDelete={async () => { const record = draft && byDate.get(draft.date); if (record && token) { await api.deleteRecord(token, record.id); } setDraft(null); refresh(); }} /></SafeAreaView>;
+  </ScrollView><BottomNavigation active="calendar" /><RecordEditor locale={locale} draft={draft} setDraft={setDraft} onSave={saveDraft} onDelete={async () => { const record = draft && byDate.get(draft.date); if (record && token) { await api.deleteRecord(token, record.id); } setDraft(null); refresh(); }} /></SafeAreaView>;
 }
 
 function Day({ date, inMonth, record, prediction, onPress }: { date: Date; inMonth: boolean; record?: DailyRecord; prediction: Prediction | null; onPress: () => void }) {

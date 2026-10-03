@@ -56,3 +56,8 @@ export type PartnerView = {
   records: SharedDailyRecord[];
   prediction: Prediction | null;
 };
+
+export type DataExport = {
+  account: Account;
+  records: DailyRecord[];
+};

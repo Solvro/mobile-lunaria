@@ -5,5 +5,5 @@ import { AuthProvider } from '@/auth';
 import { PreferencesProvider } from '@/preferences';
 
 export default function RootLayout() {
-  return <SafeAreaProvider><PreferencesProvider><AuthProvider><StatusBar style="light" /><Stack screenOptions={{ headerShown: false }} /></AuthProvider></PreferencesProvider></SafeAreaProvider>;
+  return <SafeAreaProvider><PreferencesProvider><AuthProvider><StatusBar style="light" /><Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }} /></AuthProvider></PreferencesProvider></SafeAreaProvider>;
 }

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { File, Paths } from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { api } from '@/api/client';
@@ -9,6 +11,7 @@ import type { Language, WeekStart } from '@/preferences';
 import { usePreferences } from '@/preferences';
 import { colors, shadow } from '@/theme';
 import { translate } from '@/i18n';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
 type DestructiveAction = 'cycle-data' | 'account' | null;
 
@@ -52,13 +55,25 @@ export default function Settings() {
     router.replace('/welcome');
   }
 
+  async function exportData() {
+    if (!session) return;
+    setWorking(true);
+    try {
+      const file = new File(Paths.cache, `lunaria-data-${new Date().toISOString().slice(0, 10)}.json`);
+      file.write(JSON.stringify(await api.exportData(session.token), null, 2));
+      await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: 'Export Lunaria data' });
+    } catch (error) {
+      Alert.alert('Could not export data', error instanceof Error ? error.message : 'Try again shortly.');
+    } finally { setWorking(false); }
+  }
+
   const isAccount = destructiveAction === 'account';
   return <SafeAreaView style={styles.page} edges={['top']}><ScrollView contentContainerStyle={styles.content}><View style={styles.top}><Pressable onPress={() => router.back()} hitSlop={12}><Text style={styles.back}>‹</Text></Pressable></View><Text style={styles.eyebrow}>{t('settings').toUpperCase()}</Text><Text style={styles.title}>{t('yourSettings')}</Text>
     <Section title={t('language')}><ChoiceRow label={t('english')} selected={language === 'en'} onPress={() => changeLanguage('en')} /><ChoiceRow label={t('polish')} selected={language === 'pl'} onPress={() => changeLanguage('pl')} /></Section>
     <Section title={t('calendarSettings')}><Text style={styles.description}>{t('weekStartDescription')}</Text><ChoiceRow label={t('monday')} selected={weekStart === 'monday'} onPress={() => changeWeekStart('monday')} /><ChoiceRow label={t('sunday')} selected={weekStart === 'sunday'} onPress={() => changeWeekStart('sunday')} /></Section>
-    <Section title={t('account')}><Pressable style={styles.row} onPress={leave}><Text style={styles.rowLabel}>{t('signOut')}</Text><Text style={styles.chevron}>›</Text></Pressable></Section>
+    <Section title={t('account')}><Pressable style={styles.row} onPress={exportData} disabled={working}><Text style={styles.rowLabel}>{working ? 'Exporting...' : 'Export my data (JSON)'}</Text><Text style={styles.chevron}>›</Text></Pressable><Pressable style={styles.row} onPress={leave}><Text style={styles.rowLabel}>{t('signOut')}</Text><Text style={styles.chevron}>›</Text></Pressable></Section>
     <View style={styles.danger}><Text style={styles.dangerTitle}>{t('deleteData')}</Text><Text style={styles.description}>{t('deleteDataDescription')}</Text><Pressable onPress={() => setDestructiveAction('cycle-data')}><Text style={styles.dangerAction}>{t('deleteCycleData')}</Text></Pressable><Pressable onPress={() => setDestructiveAction('account')}><Text style={styles.dangerAction}>{t('deleteAccount')}</Text></Pressable></View>
-  </ScrollView><ConfirmationSheet visible={destructiveAction !== null} title={isAccount ? 'Delete account?' : 'Delete cycle data?'} message={isAccount ? 'This permanently deletes your account, linked sharing, and all cycle data. You will be signed out.' : 'This permanently deletes all logged cycle data. Your account will remain available.'} confirmation={isAccount ? 'DELETE' : 'CLEAR'} confirmLabel={isAccount ? 'Delete account' : 'Delete cycle data'} working={working} onCancel={() => !working && setDestructiveAction(null)} onConfirm={confirmDestructiveAction} /></SafeAreaView>;
+  </ScrollView><BottomNavigation active="settings" /><ConfirmationSheet visible={destructiveAction !== null} title={isAccount ? 'Delete account?' : 'Delete cycle data?'} message={isAccount ? 'This permanently deletes your account, linked sharing, and all cycle data. You will be signed out.' : 'This permanently deletes all logged cycle data. Your account will remain available.'} confirmation={isAccount ? 'DELETE' : 'CLEAR'} confirmLabel={isAccount ? 'Delete account' : 'Delete cycle data'} working={working} onCancel={() => !working && setDestructiveAction(null)} onConfirm={confirmDestructiveAction} /></SafeAreaView>;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
