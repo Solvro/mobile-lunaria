@@ -50,16 +50,21 @@ export const colors = {
   errorContainer: '#FBE9E7',
 };
 
+export const fonts = {
+  body: 'DM Sans',
+  display: 'Fraunces',
+};
+
 export const typeScale = StyleSheet.create({
-  displaySmall: { color: colors.onSurface, fontSize: 36, lineHeight: 44, fontWeight: '700', letterSpacing: -0.5 },
-  headlineLarge: { color: colors.onSurface, fontSize: 40, lineHeight: 48, fontWeight: '800', letterSpacing: -1 },
-  headlineMedium: { color: colors.onSurface, fontSize: 28, lineHeight: 36, fontWeight: '700', letterSpacing: -0.3 },
-  titleLarge: { color: colors.onSurface, fontSize: 22, lineHeight: 28, fontWeight: '700' },
-  titleMedium: { color: colors.onSurface, fontSize: 16, lineHeight: 24, fontWeight: '600', letterSpacing: 0.15 },
-  bodyLarge: { color: colors.onSurface, fontSize: 16, lineHeight: 24, letterSpacing: 0.2 },
-  bodyMedium: { color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20, letterSpacing: 0.25 },
-  labelLarge: { color: colors.onSurface, fontSize: 14, lineHeight: 20, fontWeight: '600', letterSpacing: 0.1 },
-  labelMedium: { color: colors.onSurfaceVariant, fontSize: 12, lineHeight: 16, fontWeight: '600', letterSpacing: 0.5 },
+  displaySmall: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 36, lineHeight: 44, fontWeight: '700', letterSpacing: -0.5 },
+  headlineLarge: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 40, lineHeight: 48, fontWeight: '800', letterSpacing: -1 },
+  headlineMedium: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 28, lineHeight: 36, fontWeight: '700', letterSpacing: -0.3 },
+  titleLarge: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 22, lineHeight: 28, fontWeight: '700' },
+  titleMedium: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 16, lineHeight: 24, fontWeight: '600', letterSpacing: 0.15 },
+  bodyLarge: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 16, lineHeight: 24, letterSpacing: 0.2 },
+  bodyMedium: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 14, lineHeight: 20, letterSpacing: 0.25 },
+  labelLarge: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 14, lineHeight: 20, fontWeight: '600', letterSpacing: 0.1 },
+  labelMedium: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 12, lineHeight: 16, fontWeight: '600', letterSpacing: 0.5 },
 });
 
 export const shape = { xs: 4, sm: 8, md: 12, lg: 16, xl: 28, full: 999 };

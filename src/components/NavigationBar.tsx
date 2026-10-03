@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Keyboard, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { Tabs } from 'expo-router';
-import { colors, motion, shape } from '@/theme';
+import { colors, fonts, motion, shape } from '@/theme';
 
 type TabBarProps = Parameters<NonNullable<React.ComponentProps<typeof Tabs>['tabBar']>>[0];
 
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
   item: { flex: 1, alignItems: 'center', gap: 4 },
   indicatorSlot: { width: 64, height: 32, alignItems: 'center', justifyContent: 'center' },
   indicator: { ...StyleSheet.absoluteFill, borderRadius: 16, backgroundColor: colors.primaryContainer },
-  label: { color: colors.onSurfaceVariant, fontSize: 12, fontWeight: '500', letterSpacing: 0.4 },
+  label: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 12, fontWeight: '500', letterSpacing: 0.4 },
   labelActive: { color: colors.onSurface, fontWeight: '700' },
   badge: { position: 'absolute', top: 0, right: 14, minWidth: 16, height: 16, paddingHorizontal: 4, borderRadius: 8, backgroundColor: colors.error, alignItems: 'center', justifyContent: 'center' },
-  badgeText: { color: colors.onPrimary, fontSize: 11, fontWeight: '700' },
+  badgeText: { color: colors.onPrimary, fontFamily: fonts.body, fontSize: 11, fontWeight: '700' },
 });

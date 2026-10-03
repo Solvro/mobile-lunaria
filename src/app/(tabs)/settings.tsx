@@ -13,7 +13,7 @@ import { Screen } from '@/components/Screen';
 import { Switch } from '@/components/Switch';
 import { useI18n } from '@/i18n';
 import { usePreferences, type Language, type WeekStart } from '@/preferences';
-import { colors, shape, space, typeScale } from '@/theme';
+import { colors, fonts, shape, space, typeScale } from '@/theme';
 
 type DestructiveAction = 'cycle-data' | 'account' | null;
 
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   segment: { flex: 1, minHeight: 48, flexDirection: 'row', gap: space.sm, alignItems: 'center', justifyContent: 'center' },
   segmentDivider: { borderLeftWidth: 1, borderLeftColor: colors.outline },
   segmentActive: { backgroundColor: colors.primaryContainer },
-  segmentText: { color: colors.onSurface, fontWeight: '500', fontSize: 15 },
+  segmentText: { color: colors.onSurface, fontFamily: fonts.body, fontWeight: '500', fontSize: 15 },
   segmentTextActive: { fontWeight: '700' },
   accountRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primaryContainer, alignItems: 'center', justifyContent: 'center' },

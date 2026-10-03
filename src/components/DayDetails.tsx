@@ -4,7 +4,7 @@ import { Card } from '@/components/Card';
 import { Icon, type IconName } from '@/components/Icon';
 import { parseDate, todayIso, type DayInfo } from '@/cycle';
 import { useI18n } from '@/i18n';
-import { colors, typeScale } from '@/theme';
+import { colors, fonts, typeScale } from '@/theme';
 
 // Plain-language summary of the day selected in the calendar.
 export function DayDetails({ iso, info, record, action }: { iso: string; info: DayInfo; record?: Pick<DailyRecord, 'flow' | 'note'>; action?: React.ReactNode }) {
@@ -32,7 +32,7 @@ export function DayDetails({ iso, info, record, action }: { iso: string; info: D
 const styles = StyleSheet.create({
   card: { gap: 12 },
   header: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  today: { color: colors.primary, fontWeight: '700', fontSize: 13, backgroundColor: colors.primaryContainer, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, overflow: 'hidden' },
+  today: { color: colors.primary, fontFamily: fonts.body, fontWeight: '700', fontSize: 13, backgroundColor: colors.primaryContainer, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, overflow: 'hidden' },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   rowText: { flex: 1 },
 });

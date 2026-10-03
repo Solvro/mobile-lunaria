@@ -11,7 +11,7 @@ import { MonthCalendar, type LegendKey } from '@/components/MonthCalendar';
 import { addDays, dayClassifier, isoDate, recentRange, startOfMonth, todayIso } from '@/cycle';
 import { useI18n } from '@/i18n';
 import { usePreferences } from '@/preferences';
-import { colors, shape } from '@/theme';
+import { colors, fonts, shape } from '@/theme';
 
 // Read-only view of the linked partner's calendar, limited to what they share.
 export function SharedCalendar({ refreshKey = 0 }: { refreshKey?: number }) {
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   wrapper: { gap: 24 },
   loading: { marginVertical: 32 },
   notice: { flexDirection: 'row', gap: 10, alignItems: 'flex-start', padding: 14, borderRadius: shape.lg, backgroundColor: colors.surfaceContainer },
-  noticeText: { flex: 1, color: colors.onSurfaceVariant, fontSize: 14, lineHeight: 20 },
+  noticeText: { flex: 1, color: colors.onSurfaceVariant, fontFamily: fonts.body, fontSize: 14, lineHeight: 20 },
   viewerLabel: { flexDirection: 'row', alignItems: 'center', gap: 8, alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 8, borderRadius: shape.full, backgroundColor: colors.primaryContainer },
-  viewerText: { color: colors.onPrimaryContainer, fontSize: 14, fontWeight: '700' },
+  viewerText: { color: colors.onPrimaryContainer, fontFamily: fonts.body, fontSize: 14, fontWeight: '700' },
 });

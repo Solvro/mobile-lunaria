@@ -12,7 +12,7 @@ import { Switch } from '@/components/Switch';
 import { SharedCalendar } from '@/components/SharedCalendar';
 import { useI18n } from '@/i18n';
 import { usePartnerLink } from '@/partnerLink';
-import { colors, shape, typeScale } from '@/theme';
+import { colors, fonts, shape, typeScale } from '@/theme';
 
 const scopeKeys: (keyof SharingScope)[] = ['period_days', 'predictions', 'intimacy'];
 
@@ -194,15 +194,15 @@ const styles = StyleSheet.create({
   pendingIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.surfaceContainerLowest, alignItems: 'center', justifyContent: 'center' },
   linkedRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.fertileSurface, alignItems: 'center', justifyContent: 'center' },
-  avatarText: { color: colors.onFertileContainer, fontSize: 18, fontWeight: '700' },
-  connected: { color: colors.onFertileContainer, fontSize: 13, fontWeight: '600' },
+  avatarText: { color: colors.onFertileContainer, fontFamily: fonts.body, fontSize: 18, fontWeight: '700' },
+  connected: { color: colors.onFertileContainer, fontFamily: fonts.body, fontSize: 13, fontWeight: '600' },
   codeEntry: { gap: 10 },
-  input: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.outlineVariant, borderRadius: shape.md, minHeight: 52, paddingHorizontal: 14, color: colors.onSurface, fontSize: 18, letterSpacing: 2, fontWeight: '600' },
+  input: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.outlineVariant, borderRadius: shape.md, minHeight: 52, paddingHorizontal: 14, color: colors.onSurface, fontFamily: fonts.body, fontSize: 18, letterSpacing: 2, fontWeight: '600' },
   codeBox: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: shape.lg, backgroundColor: colors.primaryContainer },
   codeText: { flex: 1, gap: 2 },
-  code: { color: colors.onSurface, fontSize: 26, letterSpacing: 4, fontWeight: '800' },
+  code: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 26, letterSpacing: 4, fontWeight: '800' },
   shareButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, height: 44, borderRadius: shape.full, backgroundColor: colors.surfaceContainerLowest },
-  shareText: { color: colors.primary, fontWeight: '700', fontSize: 14 },
+  shareText: { color: colors.primary, fontFamily: fonts.body, fontWeight: '700', fontSize: 14 },
   or: { marginTop: 6 },
   scopeCard: { gap: 16 },
   scopeRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingTop: 16, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.outlineVariant },

@@ -5,7 +5,7 @@ import { Button } from '@/components/Button';
 import { Icon, type IconName } from '@/components/Icon';
 import { parseDate } from '@/cycle';
 import { useI18n } from '@/i18n';
-import { colors, shape, typeScale } from '@/theme';
+import { colors, fonts, shape, typeScale } from '@/theme';
 
 export type Draft = Pick<DailyRecord, 'date' | 'is_period' | 'flow' | 'intimacy' | 'note'>;
 export const flowLevels: NonNullable<DailyRecord['flow']>[] = ['spotting', 'light', 'medium', 'heavy'];
@@ -111,9 +111,9 @@ const styles = StyleSheet.create({
   flow: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 12, borderRadius: shape.md, backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant },
   flowActive: { backgroundColor: colors.period, borderColor: colors.period },
   drops: { flexDirection: 'row', height: 14, alignItems: 'center' },
-  flowText: { color: colors.onSurface, fontSize: 13, fontWeight: '600' },
+  flowText: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 13, fontWeight: '600' },
   flowTextActive: { color: colors.onPrimary },
   noteBox: { flexDirection: 'row', gap: 10, padding: 14, borderRadius: shape.lg, backgroundColor: colors.surfaceContainerLowest, borderWidth: 1, borderColor: colors.outlineVariant },
-  note: { flex: 1, minHeight: 60, color: colors.onSurface, fontSize: 15, textAlignVertical: 'top', padding: 0 },
+  note: { flex: 1, minHeight: 60, color: colors.onSurface, fontFamily: fonts.body, fontSize: 15, textAlignVertical: 'top', padding: 0 },
   actions: { gap: 4, paddingTop: 4 },
 });

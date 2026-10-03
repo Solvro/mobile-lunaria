@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { Prediction } from '@/api/types';
 import { addDays, currentPeriod, daysBetween, isoDate, parseDate, todayIso, type DayRecordLike } from '@/cycle';
 import { useI18n } from '@/i18n';
-import { colors, shape, elevation, space, typeScale } from '@/theme';
+import { colors, elevation, fonts, shape, space, typeScale } from '@/theme';
 
 // The headline card: where you are in the cycle right now, in one glance.
 export function CycleHero({ prediction, records, partnerName, children }: { prediction: Prediction | null; records: DayRecordLike[]; partnerName?: string; children?: React.ReactNode }) {
@@ -80,13 +80,13 @@ function CycleBar({ prediction }: { prediction: Prediction }) {
 
 const styles = StyleSheet.create({
   card: { borderRadius: shape.xl, borderWidth: 1, padding: space.lg, paddingTop: space.xl, gap: space.sm, ...elevation.level1 },
-  eyebrow: { color: colors.onSurface, fontSize: 16, fontWeight: '600' },
-  headline: { color: colors.onSurface, fontSize: 40, lineHeight: 46, fontWeight: '800', letterSpacing: -1 },
-  headlineText: { color: colors.onSurface, fontSize: 22, lineHeight: 28, fontWeight: '700' },
+  eyebrow: { color: colors.onSurface, fontFamily: fonts.body, fontSize: 16, fontWeight: '600' },
+  headline: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 40, lineHeight: 46, fontWeight: '800', letterSpacing: -1 },
+  headlineText: { color: colors.onSurface, fontFamily: fonts.display, fontSize: 22, lineHeight: 28, fontWeight: '700' },
   chips: { flexDirection: 'row', gap: 8 },
   chip: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: shape.full, backgroundColor: colors.surfaceContainerLowest },
   chipDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.fertile },
-  chipText: { color: colors.onFertileContainer, fontSize: 13, fontWeight: '700' },
+  chipText: { color: colors.onFertileContainer, fontFamily: fonts.body, fontSize: 13, fontWeight: '700' },
   bar: { height: 10, borderRadius: 5, backgroundColor: colors.surfaceContainer, marginTop: space.md },
   segment: { position: 'absolute', top: 0, bottom: 0, borderRadius: 5 },
   marker: { position: 'absolute', top: -4, width: 4, height: 18, marginLeft: -2, borderRadius: 2, backgroundColor: colors.onSurface, borderWidth: 1, borderColor: colors.surfaceContainerLowest },
