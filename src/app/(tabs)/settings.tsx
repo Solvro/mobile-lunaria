@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import { File, Paths } from 'expo-file-system';
 import { router } from 'expo-router';
 import * as Sharing from 'expo-sharing';
@@ -129,28 +130,27 @@ export default function Settings() {
 }
 
 function Segmented<T extends string>({ value, options, onChange }: { value: T; options: { value: T; label: string }[]; onChange: (value: T) => void }) {
-  return <View style={styles.segmented} accessibilityRole="radiogroup">
-    {options.map((option, index) => {
-      const active = option.value === value;
-      return <Pressable key={option.value} onPress={() => onChange(option.value)} style={[styles.segment, index > 0 && styles.segmentDivider, active && styles.segmentActive]} accessibilityRole="radio" accessibilityState={{ selected: active }}>
-        {active && <Icon name="check" size={16} color={colors.onSurface} />}
-        <Text style={[styles.segmentText, active && styles.segmentTextActive]}>{option.label}</Text>
-      </Pressable>;
-    })}
-  </View>;
+  const selectedIndex = options.findIndex((option) => option.value === value);
+  return <SegmentedControl
+    values={options.map((option) => option.label)}
+    selectedIndex={selectedIndex}
+    onChange={(event) => onChange(options[event.nativeEvent.selectedSegmentIndex].value)}
+    tintColor={colors.primary}
+    backgroundColor="transparent"
+    fontStyle={styles.segmentText}
+    activeFontStyle={styles.segmentTextActive}
+    style={styles.segmented}
+    accessibilityRole="radiogroup"
+  />;
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   spaced: { marginTop: 16 },
   switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  // Material 3 segmented buttons: outlined pill, selected segment tinted with a check.
-  segmented: { flexDirection: 'row', borderWidth: 1, borderColor: colors.outline, borderRadius: shape.full, overflow: 'hidden' },
-  segment: { flex: 1, minHeight: 48, flexDirection: 'row', gap: space.sm, alignItems: 'center', justifyContent: 'center' },
-  segmentDivider: { borderLeftWidth: 1, borderLeftColor: colors.outline },
-  segmentActive: { backgroundColor: colors.primaryContainer },
-  segmentText: { color: colors.onSurface, fontFamily: fonts.body, fontWeight: '500', fontSize: 15 },
-  segmentTextActive: { fontWeight: '700' },
+  segmented: { height: 40, marginTop: space.sm },
+  segmentText: { color: colors.onSurfaceVariant, fontFamily: fonts.body, fontWeight: '600', fontSize: 14 },
+  segmentTextActive: { color: colors.onPrimary, fontFamily: fonts.body, fontWeight: '700', fontSize: 14 },
   accountRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primaryContainer, alignItems: 'center', justifyContent: 'center' },
   danger: { borderWidth: 1, borderColor: colors.errorContainer, borderRadius: shape.xl, padding: space.lg, gap: space.md },
