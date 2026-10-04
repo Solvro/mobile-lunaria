@@ -1,40 +1,54 @@
 # Lunaria
 
-Lunaria is a privacy-respecting, open-source menstrual-cycle tracker. It lets people record cycle information, view clearly marked estimates, and optionally share a limited, read-only calendar view with a consenting partner.
+Lunaria to otwarta aplikacja mobilna do prywatnego śledzenia cyklu. Umożliwia zapisywanie miesiączki, intensywności krwawienia, intymności i prywatnych notatek, a także prezentuje wyraźnie oznaczone, niemedyczne prognozy. Połączony partner widzi wyłącznie wybrany przez właścicielkę danych zakres w trybie tylko do odczytu.
 
-## HackYeah 2026 Submission
+## Uruchomienie z produkcyjnym API
 
-- **Category:** ImpactHer: Technology for Real Change
-- **Project:** Lunaria
-- **Team:** Solvro Londyn
+Wymagania: Node.js 22.13 lub nowszy, aplikacja Expo Go na telefonie albo emulator iOS/Android.
 
-### Team Members
+```bash
+git clone https://github.com/Solvro/mobile-lunaria.git
+cd mobile-lunaria
+npm install
+npm run start:production
+```
 
-- Konrad Guzek
-- Kamil Marczak
-- Michał Gęs
-- Bartosz Gotowski
-- Dawid Linek
-- Dominika Stefaniak
+Zeskanuj kod QR w Expo Go albo wybierz emulator w terminalu. Polecenie `start:production` ustawia `EXPO_PUBLIC_API_URL` na `https://lunaria-api.b.solvro.pl`.
 
-### Project Description
+## Wersja przeglądarkowa
 
-Lunaria addresses a real barrier in everyday health technology: existing cycle-tracking tools often put useful predictions and partner sharing behind subscriptions while placing highly sensitive information in commercial clouds. Lunaria keeps daily cycle logging and predictions free, can be independently hosted, and makes consent the basis of every shared view.
+```bash
+git clone https://github.com/Solvro/mobile-lunaria.git
+cd mobile-lunaria
+npm install
+npm run web
+```
 
-Users can record period days, flow, intimacy, and private notes in a calendar. The app derives clearly labelled, informational cycle estimates from recorded history. A linked partner can only access a user-selected, read-only subset of period indicators, intimacy indicators, and predictions. Notes and flow details are never shared, and either person can revoke the connection immediately.
+Polecenie `npm run web` również korzysta z produkcyjnego API. Aby połączyć aplikację z własnym backendem, uruchom Expo z jego adresem:
 
-### AI Disclosure
+```bash
+EXPO_PUBLIC_API_URL=https://api.twoja-domena.pl npm run web
+```
 
-GPT-5.6 Terra, using the medium-thinking variant, was used throughout the project for ideation, research, design, implementation, debugging, documentation, and presentation preparation. The team remains responsible for the project’s functionality, security, licensing compliance, and technical decisions.
+## Samodzielne hostowanie
 
-## Key Principles
+Backend oraz landing page są publikowane w osobnych repozytoriach:
 
-- No advertising, subscriptions, or hidden charges for core cycle tracking and predictions.
-- Open-source and independently deployable data storage.
-- Explicit, reversible, read-only partner consent.
-- Clear separation of recorded information from non-medical estimates.
-- User-controlled data export and deletion.
+- [backend-lunaria](https://github.com/Solvro/backend-lunaria) zawiera API, PostgreSQL i instrukcję wdrożenia.
+- [web-lunaria](https://github.com/Solvro/web-lunaria) zawiera statyczną stronę projektu.
 
-## Disclaimer
+Po wdrożeniu własnego API podaj jego publiczny adres jako `EXPO_PUBLIC_API_URL` podczas uruchamiania lub budowania aplikacji.
 
-Cycle estimates are informational only. Lunaria does not provide medical advice, diagnosis, contraception, pregnancy-planning guidance, or a substitute for professional healthcare.
+## Zasady projektu
+
+- Bez reklam, subskrypcji i ukrytych opłat za podstawowe śledzenie cyklu oraz prognozy.
+- Partner widzi tylko wybrany zakres danych; notatki i szczegóły krwawienia nie są udostępniane.
+- Dane można wyeksportować albo usunąć z aktywnej bazy aplikacji.
+
+## Zastrzeżenie
+
+Prognozy mają charakter wyłącznie informacyjny. Lunaria nie udziela porady medycznej, nie służy jako antykoncepcja ani narzędzie do planowania ciąży i nie zastępuje opieki specjalistycznej.
+
+## Zespół
+
+Solvro Londyn: Konrad Guzek, Kamil Marczak, Michał Gęs, Bartosz Gotowski, Dawid Linek i Dominika Stefaniak.
